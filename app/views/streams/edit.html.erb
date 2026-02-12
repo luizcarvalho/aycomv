@@ -1,0 +1,9 @@
+<% content_for(:title, "Editar #{@stream.name} — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title">Editar Stream</h2>
+</div>
+
+<div class="card card-form">
+  <%= render "form", stream: @stream %>
+</div>

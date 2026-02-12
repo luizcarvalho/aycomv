@@ -1,0 +1,42 @@
+<div id="<%= dom_id(stream) %>" class="stream-card">
+  <div class="stream-preview">
+    <% if stream.preview_url.present? %>
+      <img src="<%= stream.preview_url %>" alt="<%= stream.name %>" loading="lazy">
+    <% else %>
+      <div class="stream-preview-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="m12 10 4 2-4 2z"/></svg>
+        <span>Sem preview</span>
+      </div>
+    <% end %>
+    <span class="status-badge status-<%= stream.status %>"><%= stream.status.capitalize %></span>
+  </div>
+
+  <div class="stream-body">
+    <h4 class="stream-name"><%= stream.name %></h4>
+    <p class="stream-client"><%= stream.client.name %></p>
+
+    <% if stream.error_message.present? %>
+      <p class="stream-error"><%= stream.error_message %></p>
+    <% end %>
+
+    <div class="stream-meta">
+      <code class="stream-url" title="<%= stream.url %>"><%= truncate(stream.url, length: 40) %></code>
+    </div>
+  </div>
+
+  <div class="stream-actions">
+    <%= button_to stream_status_toggle_path(stream),
+          method: :post,
+          class: "btn btn-sm #{stream.online? ? 'btn-warning' : 'btn-success'}",
+          data: { turbo_confirm: stream.online? ? "Pausar #{stream.name}?" : "Ativar #{stream.name}?" } do %>
+      <%= stream.online? ? "Pausar" : "Ativar" %>
+    <% end %>
+
+    <%= link_to "Editar", edit_stream_path(stream), class: "btn btn-ghost btn-sm" %>
+
+    <%= button_to "Excluir", stream_path(stream),
+          method: :delete,
+          class: "btn btn-danger-ghost btn-sm",
+          data: { turbo_confirm: "Excluir #{stream.name}? Os vídeos vinculados serão removidos." } %>
+  </div>
+</div>

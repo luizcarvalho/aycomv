@@ -1,0 +1,56 @@
+<% content_for(:title, "Vídeos — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title">Biblioteca de Vídeos</h2>
+  <p class="page-subtitle"><%= @videos.count %> vídeos gerados</p>
+</div>
+
+<% if @videos.any? %>
+  <div class="videos-grid">
+    <% @videos.each do |video| %>
+      <div id="<%= dom_id(video) %>" class="video-card">
+        <div class="video-thumbnail">
+          <% if video.thumbnail_url.present? %>
+            <img src="<%= video.thumbnail_url %>" alt="Timelapse <%= video.stream_name %>" loading="lazy">
+          <% else %>
+            <div class="video-thumbnail-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+            </div>
+          <% end %>
+          <span class="video-duration"><%= "#{video.duration}s" %></span>
+        </div>
+
+        <div class="video-body">
+          <h4 class="video-name"><%= video.stream_name %></h4>
+          <p class="video-date"><%= video.date.strftime("%d/%m/%Y") %></p>
+          <p class="video-client"><%= video.client.name %></p>
+
+          <% if video.note.present? %>
+            <p class="video-note"><%= video.note %></p>
+          <% end %>
+        </div>
+
+        <div class="video-actions">
+          <% if video.share_link.present? %>
+            <button class="btn btn-ghost btn-sm"
+                    data-controller="clipboard"
+                    data-clipboard-content-value="<%= video.share_link %>"
+                    data-action="click->clipboard#copy">
+              📋 Copiar Link
+            </button>
+          <% end %>
+
+          <%= button_to "Excluir", video_path(video),
+                method: :delete,
+                class: "btn btn-danger-ghost btn-sm",
+                data: { turbo_confirm: "Excluir este vídeo?" } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+    <p>Nenhum vídeo gerado ainda.</p>
+  </div>
+<% end %>

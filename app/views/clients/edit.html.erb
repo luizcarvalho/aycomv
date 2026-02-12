@@ -1,0 +1,9 @@
+<% content_for(:title, "Editar #{@client.name} — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title">Editar Cliente</h2>
+</div>
+
+<div class="card card-form">
+  <%= render "form", client: @client %>
+</div>

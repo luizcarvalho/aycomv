@@ -1,0 +1,20 @@
+<% content_for(:title, "Streams — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title">Streams</h2>
+  <%= link_to "Novo Stream", new_stream_path, class: "btn btn-primary" %>
+</div>
+
+<div class="streams-grid">
+  <% @streams.each do |stream| %>
+    <%= render "streams/stream", stream: stream %>
+  <% end %>
+</div>
+
+<% if @streams.empty? %>
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon"><circle cx="12" cy="12" r="1"/><path d="M8.46 15.54a5 5 0 0 1 0-7.07"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+    <p>Nenhum stream configurado.</p>
+    <%= link_to "Adicionar primeiro stream", new_stream_path, class: "btn btn-primary btn-sm" %>
+  </div>
+<% end %>

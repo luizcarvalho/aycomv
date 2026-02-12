@@ -1,0 +1,84 @@
+<% content_for(:title, "Dashboard — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title">Dashboard</h2>
+  <p class="page-subtitle">Visão geral do sistema de timelapse</p>
+</div>
+
+<!-- Metrics Cards -->
+<div class="metrics-grid">
+  <div class="metric-card metric-blue">
+    <div class="metric-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M8.46 15.54a5 5 0 0 1 0-7.07"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+    </div>
+    <div class="metric-info">
+      <span class="metric-value"><%= @metrics[:active_streams] %></span>
+      <span class="metric-label">Streams Ativos</span>
+    </div>
+  </div>
+
+  <div class="metric-card metric-green">
+    <div class="metric-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <div class="metric-info">
+      <span class="metric-value"><%= @metrics[:capturing_now] %></span>
+      <span class="metric-label">Capturando Agora</span>
+    </div>
+  </div>
+
+  <div class="metric-card metric-purple">
+    <div class="metric-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+    </div>
+    <div class="metric-info">
+      <span class="metric-value"><%= @metrics[:videos_generated] %></span>
+      <span class="metric-label">Vídeos Gerados</span>
+    </div>
+  </div>
+
+  <div class="metric-card metric-orange">
+    <div class="metric-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="metric-info">
+      <span class="metric-value"><%= @metrics[:offline_streams] %></span>
+      <span class="metric-label">Streams Offline</span>
+    </div>
+  </div>
+</div>
+
+<!-- Active Streams -->
+<div class="section">
+  <div class="section-header">
+    <h3 class="section-title">Streams Ativos</h3>
+    <%= link_to "Ver Todos →", streams_path, class: "btn btn-ghost btn-sm" %>
+  </div>
+
+  <% if @active_streams.any? %>
+    <div class="streams-grid">
+      <% @active_streams.each do |stream| %>
+        <div class="stream-card">
+          <div class="stream-preview">
+            <% if stream.preview_url.present? %>
+              <img src="<%= stream.preview_url %>" alt="<%= stream.name %>" loading="lazy">
+            <% else %>
+              <div class="stream-preview-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="m12 10 4 2-4 2z"/></svg>
+              </div>
+            <% end %>
+            <span class="status-badge status-<%= stream.status %>"><%= stream.status.capitalize %></span>
+          </div>
+          <div class="stream-info">
+            <h4 class="stream-name"><%= stream.name %></h4>
+            <p class="stream-client"><%= stream.client.name %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>Nenhum stream ativo no momento.</p>
+    </div>
+  <% end %>
+</div>

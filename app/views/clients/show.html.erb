@@ -1,0 +1,60 @@
+<% content_for(:title, "#{@client.name} — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title"><%= @client.name %></h2>
+  <div class="page-actions">
+    <%= link_to "Editar", edit_client_path(@client), class: "btn btn-ghost" %>
+    <%= link_to "← Voltar", clients_path, class: "btn btn-ghost" %>
+  </div>
+</div>
+
+<div class="detail-grid">
+  <div class="card">
+    <div class="card-header">
+      <h3>Informações</h3>
+    </div>
+    <div class="card-body">
+      <dl class="detail-list">
+        <div class="detail-item">
+          <dt>E-mail</dt>
+          <dd><%= @client.email %></dd>
+        </div>
+        <div class="detail-item">
+          <dt>Notificações</dt>
+          <dd>
+            <% if @client.notify_on_generate? %>
+              <span class="badge badge-success">Ativo</span>
+            <% else %>
+              <span class="badge badge-muted">Desativado</span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="detail-item">
+          <dt>Cadastrado em</dt>
+          <dd><%= @client.created_at.strftime("%d/%m/%Y às %H:%M") %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Streams (<%= @streams.count %>)</h3>
+    </div>
+    <div class="card-body">
+      <% if @streams.any? %>
+        <div class="mini-list">
+          <% @streams.each do |stream| %>
+            <div class="mini-list-item">
+              <span class="status-dot <%= stream.status %>"></span>
+              <%= link_to stream.name, edit_stream_path(stream) %>
+              <span class="text-muted"><%= stream.status.capitalize %></span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted">Nenhum stream vinculado.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

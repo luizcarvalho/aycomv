@@ -1,0 +1,23 @@
+<tr id="<%= dom_id(client) %>">
+  <td>
+    <div class="cell-primary"><%= client.name %></div>
+  </td>
+  <td><%= client.email %></td>
+  <td>
+    <span class="badge badge-info"><%= client.streams.count %> streams</span>
+  </td>
+  <td>
+    <% if client.notify_on_generate? %>
+      <span class="badge badge-success">Ativo</span>
+    <% else %>
+      <span class="badge badge-muted">Desativado</span>
+    <% end %>
+  </td>
+  <td class="text-muted"><%= client.created_at.strftime("%d/%m/%Y") %></td>
+  <td class="table-actions">
+    <%= link_to "Editar", edit_client_path(client), class: "btn btn-ghost btn-sm" %>
+    <%= button_to "Excluir", client_path(client), method: :delete,
+          class: "btn btn-danger-ghost btn-sm",
+          data: { turbo_confirm: "Tem certeza que deseja remover #{client.name}?" } %>
+  </td>
+</tr>

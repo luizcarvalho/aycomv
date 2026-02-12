@@ -1,0 +1,33 @@
+<% content_for(:title, "Clientes — AYCOM Videos") %>
+
+<div class="page-header">
+  <h2 class="page-title">Clientes</h2>
+  <%= link_to "Novo Cliente", new_client_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Streams</th>
+        <th>Notificações</th>
+        <th>Cadastrado em</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @clients.each do |client| %>
+        <%= render "clients/client", client: client %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @clients.empty? %>
+    <div class="empty-state">
+      <p>Nenhum cliente cadastrado.</p>
+      <%= link_to "Cadastrar primeiro cliente", new_client_path, class: "btn btn-primary btn-sm" %>
+    </div>
+  <% end %>
+</div>
