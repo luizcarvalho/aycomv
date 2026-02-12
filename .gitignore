@@ -29,7 +29,13 @@
 !/tmp/storage/.keep
 
 /public/assets
-/public/previews
+!/public/previews
+!/public/previews/*.jpg
+!/public/previews/.keep
+
+/public/videos
+!/public/videos/*.mp4
+!/public/videos/.keep
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
