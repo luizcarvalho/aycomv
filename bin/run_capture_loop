@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+require 'open3'
+require 'logger'
+
+# Setup logger
+logger = Logger.new(STDOUT)
+logger.formatter = proc do |severity, datetime, progname, msg|
+  "#{datetime.strftime('%Y-%m-%d %H:%M:%S')} #{severity}: #{msg}\n"
+end
+
+# Configuration
+ITERATIONS = 10
+SLEEP_DURATION = 20 # seconds
+COMMAND = "docker compose exec -T app bundle exec rake streams:capture"
+
+logger.info "Starting capture loop. Iterations: #{ITERATIONS}, Sleep: #{SLEEP_DURATION}s"
+
+ITERATIONS.times do |i|
+  iteration = i + 1
+  logger.info "--- Iteration #{iteration}/#{ITERATIONS} ---"
+  
+  start_time = Time.now
+  stdout, stderr,status = Open3.capture3(COMMAND)
+  duration = Time.now - start_time
+  
+  if status.success?
+    logger.info "Command executed successfully in #{duration.round(2)}s"
+    # Log stdout only if there's significant output, or just summary
+    # Checking for our specific "Captured" or "Failed" messages from the rake task
+    stdout.each_line do |line|
+      line.strip!
+      next if line.empty?
+      logger.info "  [OUT] #{line}"
+    end
+  else
+    logger.error "Command failed in #{duration.round(2)}s"
+    logger.error "  [ERR] #{stderr.strip}"
+    # Also log stdout as it might contain partial success or relevant info
+    stdout.each_line { |line| logger.error "  [OUT] #{line.strip}" }
+  end
+  
+  if iteration < ITERATIONS
+    logger.info "Sleeping for #{SLEEP_DURATION}s..."
+    sleep SLEEP_DURATION
+  end
+end
+
+logger.info "Capture loop finished."

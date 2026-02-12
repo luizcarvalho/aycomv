@@ -28,6 +28,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     curl \
     libvips \
+    ffmpeg \
     postgresql-client \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
