@@ -22,6 +22,13 @@
     <div class="stream-meta">
       <code class="stream-url" title="<%= stream.url %>"><%= truncate(stream.url, length: 40) %></code>
     </div>
+
+    <div class="stream-stats" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);">
+      <span>Frames: <%= number_with_delimiter stream.frames_count %></span>
+      <% if stream.last_frame_at %>
+        <span>• <%= time_ago_in_words(stream.last_frame_at) %> atrás</span>
+      <% end %>
+    </div>
   </div>
 
   <div class="stream-actions">

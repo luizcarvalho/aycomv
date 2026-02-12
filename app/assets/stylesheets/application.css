@@ -1009,7 +1009,8 @@
     background: oklch(92% 0.005 260);
     overflow: hidden;
 
-    & img {
+    & img,
+    & video {
       width: 100%;
       height: 100%;
       object-fit: cover;

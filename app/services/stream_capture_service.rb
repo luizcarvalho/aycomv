@@ -47,6 +47,11 @@ class StreamCaptureService
 
   def handle_success(path)
     puts "Captured snapshot for stream #{stream.id}: #{path}"
+
+    stream.frames_count += 1
+    stream.last_frame_at = Time.current
+    stream.save!
+
     update_preview(path)
   end
 

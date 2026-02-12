@@ -29,7 +29,7 @@
 !/tmp/storage/.keep
 
 /public/assets
-!/public/previews
+/public/previews/
 !/public/previews/*.jpg
 !/public/previews/.keep
 
