@@ -767,74 +767,84 @@
     margin-bottom: var(--space-8);
   }
 
+  /* ---- Metric Cards Redesign ---- */
   .metric-card {
     display: flex;
     align-items: center;
     gap: var(--space-4);
     padding: var(--space-5) var(--space-6);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
     background: var(--color-bg-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    position: relative;
+    overflow: hidden;
 
     &:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
+      border-color: var(--color-border);
     }
   }
 
   .metric-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-md);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 
     & svg {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
     }
   }
 
+  /* Specific Colors for Icons */
   .metric-blue .metric-icon {
-    background: var(--color-info-bg);
+    background: oklch(50% 0.15 250 / 0.1);
     color: var(--color-info);
   }
 
   .metric-green .metric-icon {
-    background: var(--color-success-bg);
+    background: oklch(50% 0.16 150 / 0.1);
     color: var(--color-success);
   }
 
   .metric-purple .metric-icon {
-    background: var(--color-purple-bg);
+    background: oklch(50% 0.2 300 / 0.1);
     color: var(--color-purple);
   }
 
   .metric-orange .metric-icon {
-    background: var(--color-orange-bg);
+    background: oklch(58% 0.18 55 / 0.1);
     color: var(--color-orange);
   }
 
   .metric-info {
     display: flex;
     flex-direction: column;
+    justify-content: center;
   }
 
   .metric-value {
-    font-size: 1.75rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
   }
 
   .metric-label {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     margin-top: var(--space-1);
+    letter-spacing: 0.01em;
   }
 
   /* ---- Sections ---- */
@@ -863,14 +873,21 @@
 
   .stream-card {
     background: var(--color-bg-raised);
-    border: 1px solid var(--color-border);
+    border: 1px solid transparent;
+    /* Removed visible border unless improved */
     border-radius: var(--radius-lg);
     overflow: hidden;
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
 
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+      border-color: var(--color-border-subtle);
+
+      & .stream-preview img {
+        transform: scale(1.05);
+      }
     }
   }
 
@@ -884,12 +901,18 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform var(--transition-normal);
     }
 
     & .status-badge {
       position: absolute;
-      top: var(--space-2);
-      right: var(--space-2);
+      top: var(--space-3);
+      right: var(--space-3);
+      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
   }
 
