@@ -9,8 +9,8 @@ logger.formatter = proc do |severity, datetime, progname, msg|
 end
 
 # Configuration
-ITERATIONS = 10
-SLEEP_DURATION = 20 # seconds
+ITERATIONS = 100
+SLEEP_DURATION = 5 # seconds
 COMMAND = "docker compose exec -T app bundle exec rake streams:capture"
 
 logger.info "Starting capture loop. Iterations: #{ITERATIONS}, Sleep: #{SLEEP_DURATION}s"

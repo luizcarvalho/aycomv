@@ -11,12 +11,4 @@ class Video < ApplicationRecord
   scope :for_client_id, ->(client_id) { joins(:stream).where(streams: { client_id: client_id }) }
   scope :for_stream, ->(stream_id) { where(stream_id: stream_id) }
   scope :preloaded, -> { includes(stream: :client) }
-  before_create :generate_share_link
-
-  private
-
-  def generate_share_link
-    token = SecureRandom.urlsafe_base64(8)
-    self.share_link = "https://aycom.videos/share/v/#{token}"
-  end
 end

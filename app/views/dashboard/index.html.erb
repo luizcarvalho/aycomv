@@ -73,6 +73,9 @@
             <h4 class="stream-name"><%= stream.name %></h4>
             <p class="stream-client"><%= stream.client.name %></p>
           </div>
+            <div class="stream-actions">
+              <%= link_to "Ver Vídeos", videos_path(stream_id: stream.id), class: "btn btn-ghost btn-sm" %>
+            </div>
         </div>
       <% end %>
     </div>

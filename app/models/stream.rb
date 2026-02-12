@@ -11,6 +11,7 @@ class Stream < ApplicationRecord
   scope :active, -> { where(status: %i[online starting]) }
   scope :reverse_chronologically, -> { order(created_at: :desc) }
   scope :preloaded, -> { includes(:client) }
+  scope :for_client, ->(client_id) { where(client_id: client_id) }
 
   def toggle_status
     online? ? go_offline : go_online

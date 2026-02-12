@@ -59,16 +59,14 @@
         <div class="video-actions">
           <% if video.file_path.present? %>
             <a href="<%= video.file_path %>" download class="btn btn-ghost btn-sm" title="Baixar Vídeo">
-              ⬇️ Baixar
+              Baixar
             </a>
-          <% end %>
 
-          <% if video.share_link.present? %>
             <button class="btn btn-ghost btn-sm"
                     data-controller="clipboard"
-                    data-clipboard-content-value="<%= video.share_link %>"
+                    data-clipboard-content-value="<%= "#{request.base_url}#{video.file_path}" %>"
                     data-action="click->clipboard#copy">
-              📋 Copiar Link
+              Copiar Link
             </button>
           <% end %>
 

@@ -32,10 +32,12 @@ class StreamCaptureService
   def capture_snapshot
     # Capture frame using ffmpeg
     # -y: overwrite output files
+    # -rw_timeout 10000000: 10s timeout for TCP reads (microseconds)
+    # -loglevel error: suppress verbose output
     # -i: input url
     # -vframes 1: output one frame
     # -q:v 2: high quality jpeg
-    cmd = "ffmpeg -y -i \"#{stream.url}\" -vframes 1 -q:v 2 \"#{filepath}\""
+    cmd = "ffmpeg -y -rw_timeout 10000000 -loglevel error -i \"#{stream.url}\" -vframes 1 -q:v 2 \"#{filepath}\""
     stdout, stderr, status = Open3.capture3(cmd)
 
     if status.success? && File.exist?(filepath)
@@ -46,7 +48,7 @@ class StreamCaptureService
   end
 
   def handle_success(path)
-    puts "Captured snapshot for stream #{stream.id}: #{path}"
+    Rails.logger.info "Captured snapshot for stream #{stream.id}: #{path}"
 
     stream.frames_count += 1
     stream.last_frame_at = Time.current
@@ -56,17 +58,17 @@ class StreamCaptureService
   end
 
   def handle_failure(stdout, stderr)
-    puts "Failed to capture snapshot for stream #{stream.id}"
-    puts "FFmpeg Output:\n#{stdout}"
-    puts "FFmpeg Error:\n#{stderr}"
+    Rails.logger.warn "Failed to capture snapshot for stream #{stream.id}"
+    Rails.logger.warn "FFmpeg Error: #{stderr}"
 
     error_message = "Failed to capture snapshot. Error: #{stderr.strip}"
-    stream.update(error_message: error_message)
+    # Truncate error message to fit in database if necessary
+    stream.update(error_message: error_message.truncate(255))
   end
 
   def handle_error(message)
     error_msg = "Error capturing stream #{stream.id}: #{message}"
-    puts error_msg
+    Rails.logger.error error_msg
     stream.update(error_message: error_msg)
   end
 

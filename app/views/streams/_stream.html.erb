@@ -39,6 +39,7 @@
       <%= stream.online? ? "Pausar" : "Ativar" %>
     <% end %>
 
+    <%= link_to "Ver Vídeos", videos_path(stream_id: stream.id), class: "btn btn-ghost btn-sm" %>
     <%= link_to "Editar", edit_stream_path(stream), class: "btn btn-ghost btn-sm" %>
 
     <%= button_to "Excluir", stream_path(stream),
