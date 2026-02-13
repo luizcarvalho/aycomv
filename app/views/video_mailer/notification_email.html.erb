@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style>
+      /* Modern and clean design */
+      body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: #f4f4f7;
+        color: #51545e;
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: none;
+        width: 100% !important;
+      }
+      .email-wrapper {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f7;
+      }
+      .email-content {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        max-width: 600px;
+        margin: 0 auto; 
+      }
+      .email-header {
+        background-color: #2e0259; /* Brand color dark purple */
+        padding: 25px 0;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+      }
+      .email-header h1 {
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      .email-body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .email-body-inner {
+        padding: 40px;
+      }
+      h2 {
+        color: #333333;
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 0;
+        text-align: center;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.6em;
+        margin-bottom: 20px;
+        color: #51545e;
+      }
+      .video-details {
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c5ce7;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .video-details p {
+        margin: 5px 0;
+        font-size: 14px;
+      }
+      .button-container {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .button {
+        background-color: #6c5ce7; /* Brand color purple */
+        color: #ffffff !important;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 50px;
+        text-align: center;
+        text-decoration: none;
+        width: 200px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      .button:hover {
+        background-color: #5b4bc4;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #a8aaaf;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-wrapper">
+      <div class="email-content">
+        <!-- Header -->
+        <div class="email-header">
+          <h1>Aycomvideos</h1>
+        </div>
+        
+        <!-- Body -->
+        <div class="email-body">
+          <div class="email-body-inner">
+            <h2>Olá, <%= @client.name %>! 👋</h2>
+            
+            <p>Temos ótimas notícias! O vídeo do seu monitoramento foi processado e já está disponível para visualização.</p>
+            
+            <div class="video-details">
+              <p><strong>📅 Data:</strong> <%= @video.created_at.strftime("%d/%m/%Y") %></p>
+              <p><strong>⏱️ Duração:</strong> <%= @video.duration %> segundos</p>
+              <p><strong>📹 Stream:</strong> <%= @video.stream_name %></p>
+            </div>
+
+            <p>Você pode baixar ou assistir ao vídeo clicando no botão abaixo:</p>
+            
+            <div class="button-container">
+              <%= link_to "Assistir Vídeo", @video.file_path, class: "button" %>
+            </div>
+            
+            <p>Se tiver qualquer dúvida, entre em contato com nosso suporte.</p>
+            
+            <p>Atenciosamente,<br>Equipe Aycomvideos</p>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+          <p>© <%= Time.now.year %> Aycomvideos. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

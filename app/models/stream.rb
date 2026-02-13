@@ -21,7 +21,11 @@ class Stream < ApplicationRecord
     update!(status: :online, error_message: nil)
   end
 
-  def go_offline
-    update!(status: :offline, error_message: "Parado manualmente")
+  def go_offline(error_message: "Parado manualmente")
+    update!(status: :offline, error_message: error_message)
+  end
+
+  def go_error(error_message:)
+    update!(status: :error, error_message: error_message, last_error_at: Time.current)
   end
 end

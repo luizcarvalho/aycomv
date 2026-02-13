@@ -1,0 +1,11 @@
+class VideoMailer < ApplicationMailer
+  def notification_email
+    @video = params[:video]
+    @client = @video.stream.client
+    @download_url = "http://localhost:3000#{@video.file_path}" # TODO: Configure host properly for production
+
+    mail(to: @client.email, subject: "Seu vídeo foi processado com sucesso! 🎥") do |format|
+      format.html { render layout: false }
+    end
+  end
+end

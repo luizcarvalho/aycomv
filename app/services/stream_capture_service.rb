@@ -52,6 +52,7 @@ class StreamCaptureService
 
     stream.frames_count += 1
     stream.last_frame_at = Time.current
+    stream.last_error_at = nil
     stream.save!
 
     update_preview(path)
@@ -63,13 +64,13 @@ class StreamCaptureService
 
     error_message = "Failed to capture snapshot. Error: #{stderr.strip}"
     # Truncate error message to fit in database if necessary
-    stream.update(error_message: error_message.truncate(255))
+    stream.go_error(error_message: error_message.truncate(255))
   end
 
   def handle_error(message)
     error_msg = "Error capturing stream #{stream.id}: #{message}"
     Rails.logger.error error_msg
-    stream.update(error_message: error_msg)
+    stream.go_error(error_message: error_msg)
   end
 
   def update_preview(source_path)

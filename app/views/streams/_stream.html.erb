@@ -28,6 +28,9 @@
       <% if stream.last_frame_at %>
         <span>• <%= time_ago_in_words(stream.last_frame_at) %> atrás</span>
       <% end %>
+      <% if stream.last_error_at %>
+        <span class="text-danger">• Erro: <%= time_ago_in_words(stream.last_error_at) %> atrás</span>
+      <% end %>
     </div>
   </div>
 

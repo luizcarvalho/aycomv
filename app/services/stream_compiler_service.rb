@@ -84,7 +84,7 @@ class StreamCompilerService
   end
 
   def create_video_record
-    Video.create!(
+    video = Video.create!(
       stream: stream,
       date: date,
       created_at: Time.now,
@@ -93,6 +93,9 @@ class StreamCompilerService
       generated_at: Time.now
     )
     stream.update!(frames_count: 0)
+
+    # Send notification email
+    VideoMailer.with(video: video).notification_email.deliver_later
   end
 
   def handle_failure
