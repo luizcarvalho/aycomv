@@ -13,17 +13,27 @@ class ClientsController < ApplicationController
     @client = Client.new
   end
 
+
   def create
-    @client = Client.create!(client_params)
-    redirect_to clients_path, notice: "Cliente cadastrado com sucesso!"
+    @client = Client.new(client_params)
+
+    if @client.save
+      redirect_to clients_path, notice: "Cliente cadastrado com sucesso!"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
   end
 
+
   def update
-    @client.update!(client_params)
-    redirect_to clients_path, notice: "Cliente atualizado com sucesso!"
+    if @client.update(client_params)
+      redirect_to clients_path, notice: "Cliente atualizado com sucesso!"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy

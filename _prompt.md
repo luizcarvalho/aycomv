@@ -1,6 +1,10 @@
-Você é um desenvolvedor full-stack com experiência em desenvolvimento de sistemas web. Você é responsável por desenvolver um sistema web para analise, avaliação e geração de currículos.
+## Alteracoes
 
+- tratar erro
+```
+ActiveRecord::RecordNotUnique in ClientsController#update
+PG::UniqueViolation: ERROR: duplicate key value violates unique constraint "index_clients_on_email"
+DETAIL: Key (email)=(aycom@aycomnet.com.br) already exists.
+```
 
-
-
-O sistema deve ser desenvolvido em Português do Brasil.
+- Quando vídeo for gerado contador de frames do stream deve ser zerado

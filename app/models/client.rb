@@ -3,7 +3,7 @@ class Client < ApplicationRecord
   has_many :videos, through: :streams
 
   validates :name, presence: true
-  validates :email, presence: true
+  validates :email, presence: true, uniqueness: true
 
   normalizes :email, with: ->(email) { email.strip.downcase }
 
