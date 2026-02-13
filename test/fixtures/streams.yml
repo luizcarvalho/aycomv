@@ -1,0 +1,15 @@
+one:
+  name: Stream One
+  client: one
+  url: rtsp://example.com/one
+  status: online
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+two:
+  name: Stream Two
+  client: two
+  url: rtsp://example.com/two
+  status: online
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

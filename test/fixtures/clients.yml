@@ -1,0 +1,11 @@
+one:
+  name: Client One
+  email: client1@example.com
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+two:
+  name: Client Two
+  email: client2@example.com
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

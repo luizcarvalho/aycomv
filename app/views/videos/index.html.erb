@@ -4,83 +4,107 @@
   <h2 class="page-title">Biblioteca de Vídeos</h2>
   <div class="page-actions">
     <%= form_with url: videos_path, method: :get, class: "form-inline", data: { turbo_frame: "videos_list", turbo_action: "advance" } do |f| %>
-      <div style="display: flex; gap: var(--space-2);">
+      <div class="filter-toolbar">
         <%= f.select :client_id,
             options_from_collection_for_select(@clients, :id, :name, params[:client_id]),
             { include_blank: "Todos os Clientes" },
-            { class: "form-select form-select-sm", onchange: 'this.form.requestSubmit()' } %>
+            { class: "filter-input", onchange: 'this.form.requestSubmit()' } %>
+
+        <div style="width: 1px; height: 16px; background: var(--color-border); margin: 0 var(--space-1);"></div>
 
         <%= f.select :stream_id,
             options_from_collection_for_select(@streams, :id, :name, params[:stream_id]),
             { include_blank: "Todas as Câmeras" },
-            { class: "form-select form-select-sm", onchange: 'this.form.requestSubmit()' } %>
+            { class: "filter-input", onchange: 'this.form.requestSubmit()' } %>
+
+        <div style="width: 1px; height: 16px; background: var(--color-border); margin: 0 var(--space-1);"></div>
+
+        <%= f.date_field :date,
+            value: params[:date],
+            class: "filter-input",
+            onchange: 'this.form.requestSubmit()' %>
+
+        <div style="width: 1px; height: 16px; background: var(--color-border); margin: 0 var(--space-1);"></div>
+
+        <%= f.select :sort,
+            options_for_select([
+              ["Mais recentes", nil],
+              ["Mais antigos", "oldest"],
+              ["Menor duração", "shortest"],
+              ["Maior duração", "longest"]
+            ], params[:sort]),
+            {},
+            { class: "filter-input", onchange: 'this.form.requestSubmit()' } %>
       </div>
     <% end %>
   </div>
-  <p class="page-subtitle" style="width: 100%; margin-top: var(--space-2);"><%= @videos.count %> vídeos gerados</p>
 </div>
 
-<% if @videos.any? %>
-  <div class="videos-grid">
-    <% @videos.each do |video| %>
-      <div id="<%= dom_id(video) %>" class="video-card">
-        <div class="video-thumbnail">
-          <% if video.file_path.present? %>
-            <video
-              src="<%= video.file_path %>"
-              poster="<%= video.thumbnail_url %>"
-              controls
-              preload="none"
-              width="100%"
-              height="100%"
-              playsinline
-              class="video-player">
-            </video>
-          <% elsif video.thumbnail_url.present? %>
-            <img src="<%= video.thumbnail_url %>" alt="Timelapse <%= video.stream_name %>" loading="lazy">
-          <% else %>
-            <div class="video-thumbnail-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-            </div>
-          <% end %>
-          <span class="video-duration"><%= "#{video.duration}s" %></span>
+<%= turbo_frame_tag "videos_list" do %>
+  <p class="page-subtitle" style="margin-bottom: var(--space-4);"><%= @videos.count %> vídeos gerados</p>
+
+  <% if @videos.any? %>
+    <div class="videos-grid">
+      <% @videos.each do |video| %>
+        <div id="<%= dom_id(video) %>" class="video-card">
+          <div class="video-thumbnail">
+            <% if video.file_path.present? %>
+              <video
+                src="<%= video.file_path %>"
+                poster="<%= video.thumbnail_url %>"
+                controls
+                preload="none"
+                width="100%"
+                height="100%"
+                playsinline
+                class="video-player">
+              </video>
+            <% elsif video.thumbnail_url.present? %>
+              <img src="<%= video.thumbnail_url %>" alt="Timelapse <%= video.stream_name %>" loading="lazy">
+            <% else %>
+              <div class="video-thumbnail-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+              </div>
+            <% end %>
+            <span class="video-duration"><%= "#{video.duration}s" %></span>
+          </div>
+
+          <div class="video-body">
+            <h4 class="video-name"><%= video.stream_name %></h4>
+            <p class="video-date"><%= video.date.strftime("%d/%m/%Y") %></p>
+            <p class="video-client"><%= video.client.name %></p>
+
+            <% if video.note.present? %>
+              <p class="video-note"><%= video.note %></p>
+            <% end %>
+          </div>
+
+          <div class="video-actions">
+            <% if video.file_path.present? %>
+              <a href="<%= video.file_path %>" download class="btn btn-ghost btn-sm" title="Baixar Vídeo">
+                Baixar
+              </a>
+
+              <button class="btn btn-ghost btn-sm"
+                      data-controller="clipboard"
+                      data-clipboard-content-value="<%= "#{request.base_url}#{video.file_path}" %>"
+                      data-action="click->clipboard#copy">
+                Copiar Link
+              </button>
+            <% end %>
+
+            <%= button_to "Excluir", video_path(video),
+                  method: :delete,
+                  class: "btn btn-danger-ghost btn-sm",
+                  data: { turbo_confirm: "Excluir este vídeo?" } %>
+          </div>
         </div>
-
-        <div class="video-body">
-          <h4 class="video-name"><%= video.stream_name %></h4>
-          <p class="video-date"><%= video.date.strftime("%d/%m/%Y") %></p>
-          <p class="video-client"><%= video.client.name %></p>
-
-          <% if video.note.present? %>
-            <p class="video-note"><%= video.note %></p>
-          <% end %>
-        </div>
-
-        <div class="video-actions">
-          <% if video.file_path.present? %>
-            <a href="<%= video.file_path %>" download class="btn btn-ghost btn-sm" title="Baixar Vídeo">
-              Baixar
-            </a>
-
-            <button class="btn btn-ghost btn-sm"
-                    data-controller="clipboard"
-                    data-clipboard-content-value="<%= "#{request.base_url}#{video.file_path}" %>"
-                    data-action="click->clipboard#copy">
-              Copiar Link
-            </button>
-          <% end %>
-
-          <%= button_to "Excluir", video_path(video),
-                method: :delete,
-                class: "btn btn-danger-ghost btn-sm",
-                data: { turbo_confirm: "Excluir este vídeo?" } %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-<% else %>
-  <div class="empty-state">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-    <p>Nenhum vídeo gerado ainda.</p>
-  </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+      <p>Nenhum vídeo encontrado.</p>
+    </div>
+  <% end %>
 <% end %>

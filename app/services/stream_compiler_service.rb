@@ -92,6 +92,7 @@ class StreamCompilerService
       duration: image_count / 30, # Approx duration
       generated_at: Time.now
     )
+    stream.update!(frames_count: 0)
   end
 
   def handle_failure

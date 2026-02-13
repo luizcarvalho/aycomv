@@ -1,0 +1,23 @@
+one:
+  stream: one
+  date: 2023-10-01
+  duration: 60
+  generated_at: 2023-10-01 10:00:00
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+two:
+  stream: one
+  date: 2023-10-02
+  duration: 120
+  generated_at: 2023-10-02 10:00:00
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+three:
+  stream: two
+  date: 2023-10-01
+  duration: 180
+  generated_at: 2023-10-01 11:00:00
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
