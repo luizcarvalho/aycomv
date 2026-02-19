@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a Ruby on Rails application named "aycomvideos". Based on the file structure and dependencies, it appears to be a web application for managing and processing video streams.
+This is a Ruby on Rails application named "aycomv". Based on the file structure and dependencies, it appears to be a web application for managing and processing video streams.
 
 The application uses:
 - **Backend:** Ruby on Rails 8.1

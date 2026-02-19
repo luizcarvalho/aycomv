@@ -1,4 +1,4 @@
-name: "aycomvideos"
+name: "aycomv"
 
 services:
   app:
@@ -13,7 +13,7 @@ services:
       - "3000:3000"
     environment:
       - RAILS_ENV=development
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aycomvideos_development
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aycomv_development
     command: ["./bin/rails", "server", "-b", "0.0.0.0"]
     depends_on:
       - postgres

@@ -27,13 +27,13 @@ default: &default
 
 development:
   <<: *default
-  database: aycomvideos_development
+  database: aycomv_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
   # When left blank, PostgreSQL will use the default role. This is
   # the same name as the operating system user running Rails.
-  #username: aycomvideos
+  #username: aycomv
 
   # The password associated with the PostgreSQL role (username).
   #password:
@@ -61,7 +61,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: aycomvideos_test
+  database: aycomv_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -92,18 +92,18 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: aycomvideos_production
-    username: aycomvideos
-    password: <%= ENV["AYCOMVIDEOS_DATABASE_PASSWORD"] %>
+    database: aycomv_production
+    username: aycomv
+    password: <%= ENV["AYCOMV_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
-    database: aycomvideos_production_cache
+    database: aycomv_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: aycomvideos_production_queue
+    database: aycomv_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: aycomvideos_production_cable
+    database: aycomv_production_cable
     migrations_paths: db/cable_migrate

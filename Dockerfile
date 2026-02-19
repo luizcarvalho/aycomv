@@ -3,11 +3,11 @@
 
 # Unified Dockerfile for both production and development
 # Usage:
-#   Production: docker build -t aycomvideos .
-#   Development: docker build --target development -t aycomvideos-dev .
+#   Production: docker build -t aycomv .
+#   Development: docker build --target development -t aycomv-dev .
 #
 # Run production:
-#   docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name aycomvideos aycomvideos
+#   docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name aycomv aycomv
 #
 # Run development:
 #   docker compose up (uses the development target)
