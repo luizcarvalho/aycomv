@@ -2,7 +2,7 @@ class ClientsController < ApplicationController
   before_action :set_client, only: %i[ show edit update destroy ]
 
   def index
-    @clients = Client.alphabetically.all
+    @pagy, @clients = pagy(Client.alphabetically)
   end
 
   def show

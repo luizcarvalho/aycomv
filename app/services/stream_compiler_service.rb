@@ -50,7 +50,8 @@ class StreamCompilerService
   end
 
   def output_filename
-    @output_filename ||= "#{SecureRandom.uuid}.mp4"
+    timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+    @output_filename ||= "#{timestamp}_#{SecureRandom.uuid}.mp4"
   end
 
   def output_path
@@ -94,8 +95,8 @@ class StreamCompilerService
     )
     stream.update!(frames_count: 0)
 
-    # Send notification email
-    VideoMailer.with(video: video).notification_email.deliver_later
+    # Send notification email now
+    VideoMailer.with(video: video).notification_email.deliver_now
   end
 
   def handle_failure

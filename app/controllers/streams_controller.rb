@@ -4,6 +4,8 @@ class StreamsController < ApplicationController
   def index
     @streams = Stream.preloaded.reverse_chronologically
     @streams = @streams.for_client(params[:client_id]) if params[:client_id].present?
+
+    @pagy, @streams = pagy(@streams)
   end
 
   def show

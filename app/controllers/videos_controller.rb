@@ -7,6 +7,8 @@ class VideosController < ApplicationController
     @videos = @videos.for_stream(params[:stream_id]) if params[:stream_id].present?
     @videos = @videos.by_date(params[:date]) if params[:date].present?
     @videos = @videos.sorted_by(params[:sort])
+
+    @pagy, @videos = pagy(@videos)
   end
 
   def destroy

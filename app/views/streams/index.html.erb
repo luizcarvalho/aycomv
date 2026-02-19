@@ -17,4 +17,8 @@
     <p>Nenhum stream configurado.</p>
     <%= link_to "Adicionar primeiro stream", new_stream_path, class: "btn btn-primary btn-sm" %>
   </div>
+<% else %>
+  <div class="d-flex justify-content-center mt-4">
+    <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
 <% end %>
