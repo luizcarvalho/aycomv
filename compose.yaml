@@ -25,6 +25,8 @@ services:
       - default
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     environment:
       # load from env
       POSTGRES_USER: ${AYCOMV_DATABASE_USER}
