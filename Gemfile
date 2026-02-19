@@ -67,4 +67,4 @@ group :test do
   gem "minitest-mock"
 end
 
-gem "pagy", "~> 9.3"
+gem "pagy", "~> 43.2"
