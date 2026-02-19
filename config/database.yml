@@ -93,7 +93,7 @@ production:
   primary: &primary_production
     <<: *default
     database: aycomv_production
-    username: <%= ENV.fetch("AYCOMV_DATABASE_USER", "aycomv") %>
+    username: <%= ENV.fetch("DATABASE_USER", "aycomv") %>
     password: <%= Rails.application.credentials.database_password %>
   cache:
     <<: *primary_production
