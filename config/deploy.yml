@@ -2,12 +2,12 @@
 service: aycomv
 
 # Name of the container image (use your-user/app-name on external registries).
-image: aycomv
+image: ghcr.io/luizcarvalho/aycomv
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 104.131.89.37
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -27,19 +27,23 @@ servers:
 # Where you keep your container images.
 registry:
   # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: localhost:5555
+  server: ghcr.io
+  username: luizcarvalho
 
   # Needed for authenticated registries.
   # username: your-user
 
   # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
   secret:
     - RAILS_MASTER_KEY
+    - KAMAL_REGISTRY_PASSWORD
+    - SSH_PRIVATE_KEY
+
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
@@ -91,8 +95,8 @@ builder:
   #   - RAILS_MASTER_KEY
 
 # Use a different ssh user than root
-# ssh:
-#   user: app
+ssh:
+  user: luiz
 
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:

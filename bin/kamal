@@ -23,5 +23,6 @@ end
 
 require "rubygems"
 require "bundler/setup"
+require "dotenv/load"
 
 load Gem.bin_path("kamal", "kamal")

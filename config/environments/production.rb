@@ -60,15 +60,15 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
-  config.action_mailer.smtp_settings = {
-    user_name: ENV.fetch("SENDGRID_USERNAME"),
-    password: ENV.fetch("SENDGRID_PASSWORD"),
-    domain: "investobra.com.br",
-    address: "smtp.sendgrid.net",
-    port: 587,
-    authentication: :plain,
-    enable_starttls_auto: true
-  }
+  # config.action_mailer.smtp_settings = {
+  #   user_name: ENV.fetch("SENDGRID_USERNAME"),
+  #   password: ENV.fetch("SENDGRID_PASSWORD"),
+  #   domain: "investobra.com.br",
+  #   address: "smtp.sendgrid.net",
+  #   port: 587,
+  #   authentication: :plain,
+  #   enable_starttls_auto: true
+  # }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
