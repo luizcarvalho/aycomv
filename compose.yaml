@@ -26,8 +26,9 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      # load from env
+      POSTGRES_USER: ${AYCOMV_DATABASE_USER}
+      POSTGRES_PASSWORD: ${AYCOMV_DATABASE_PASSWORD}
 
 volumes:
   postgres-data:

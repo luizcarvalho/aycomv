@@ -93,8 +93,8 @@ production:
   primary: &primary_production
     <<: *default
     database: aycomv_production
-    username: aycomv
-    password: <%= ENV["AYCOMV_DATABASE_PASSWORD"] %>
+    username: <%= ENV.fetch("AYCOMV_DATABASE_USER") %>
+    password: <%= ENV.fetch("AYCOMV_DATABASE_PASSWORD") %>
   cache:
     <<: *primary_production
     database: aycomv_production_cache
