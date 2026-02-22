@@ -1,0 +1,27 @@
+<% content_for(:title) { "Login — AYCOM Videos" } %>
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="https://res.cloudinary.com/drlko5ghb/image/upload/v1770678369/DELETE/aycomlogo.png" alt="AYCOM Videos" class="login-logo">
+      <h1>Entrar no sistema</h1>
+      <p>Insira suas credenciais para acessar o painel</p>
+    </div>
+
+    <%= form_with url: session_path, class: "login-form" do |f| %>
+      <div class="form-group">
+        <label for="email_address">Email</label>
+        <%= f.email_field :email_address, id: "email_address", placeholder: "admin@exemplo.com", required: true, autofocus: true, autocomplete: "email" %>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <%= f.password_field :password, id: "password", placeholder: "••••••••", required: true, autocomplete: "current-password" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Entrar", class: "btn-login" %>
+      </div>
+    <% end %>
+  </div>
+</div>
