@@ -42,7 +42,7 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - KAMAL_REGISTRY_PASSWORD
-    - DATABASE_PASSWORD
+    - POSTGRES_PASSWORD
 
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
