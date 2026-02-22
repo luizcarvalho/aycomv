@@ -42,8 +42,8 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - KAMAL_REGISTRY_PASSWORD
-    - POSTGRES_PASSWORD
-    - POSTGRES_USER
+    - DATABASE_PASSWORD
+    - DATABASE_USER
 
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
@@ -109,13 +109,14 @@ accessories:
     port: 5432
     env:
       clear:
-        DB_HOST: aycomv-db
         POSTGRES_DB: aycomv_production
       secret:
         - POSTGRES_USER
         - POSTGRES_PASSWORD
     directories:
       - aycomv_production_data:/var/lib/postgresql/data
+    options:
+      network: kamal
 #   redis:
 #     image: valkey/valkey:8
 #     host: 192.168.0.2
