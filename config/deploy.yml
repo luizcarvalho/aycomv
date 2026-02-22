@@ -106,9 +106,10 @@ accessories:
     image: postgres:16.1
     host: 104.131.89.37
     # Change to 5432 to expose port to the world instead of just local network.
-    port: "127.0.0.1:5432:5432"
+    port: 5432
     env:
       clear:
+        DB_HOST: aycomv-db
         POSTGRES_DB: aycomv_production
       secret:
         - POSTGRES_USER
