@@ -115,8 +115,6 @@ accessories:
         - POSTGRES_PASSWORD
     directories:
       - aycomv_production_data:/var/lib/postgresql/data
-    options:
-      network: kamal
 #   redis:
 #     image: valkey/valkey:8
 #     host: 192.168.0.2
