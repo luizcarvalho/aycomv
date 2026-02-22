@@ -26,6 +26,6 @@ class Stream < ApplicationRecord
   end
 
   def go_error(error_message:)
-    update!(status: :error, error_message: error_message, last_error_at: Time.current)
+    update!(error_message: error_message, last_error_at: Time.current)
   end
 end

@@ -1,2 +1,0 @@
-- Não desativar o stream quando houver erro
-- Contador de frames não reseta quando error acontece
