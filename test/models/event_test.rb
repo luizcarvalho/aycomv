@@ -13,14 +13,14 @@ class EventTest < ActiveSupport::TestCase
 
   test "Event.log creates an event" do
     assert_difference "Event.count", 1 do
-      Event.log(modulo: "client", rotulo: "client_created", valor: 42, object_id: 42, metadata: { name: "Test" })
+      Event.log(modulo: "client", rotulo: "client_created", valor: 42, client_id: clients(:one).id, metadata: { name: "Test" })
     end
 
     event = Event.last
     assert_equal "client", event.modulo
     assert_equal "client_created", event.rotulo
     assert_equal "42", event.valor
-    assert_equal 42, event.object_id
+    assert_equal clients(:one).id, event.client_id
     assert_equal({ "name" => "Test" }, event.metadata)
   end
 
@@ -35,8 +35,8 @@ class EventTest < ActiveSupport::TestCase
     assert events.all? { |e| e.modulo == "stream" }
   end
 
-  test "by_object scope filters by object_id" do
-    events = Event.by_object(1)
-    assert events.all? { |e| e.object_id == 1 }
+  test "by_client scope filters by client_id" do
+    events = Event.by_client(1)
+    assert events.all? { |e| e.client_id == 1 }
   end
 end

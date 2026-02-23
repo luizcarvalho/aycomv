@@ -13,7 +13,7 @@ class VideosController < ApplicationController
 
   def destroy
     @video = Video.find(params[:id])
-    Event.log(modulo: "video", rotulo: "video_destroyed", valor: @video.id, object_id: @video.id,
+    Event.log(modulo: "video", rotulo: "video_destroyed", valor: @video.id, client_id: @video.stream.client_id,
       metadata: { stream_name: @video.stream.name, date: @video.date.to_s })
     @video.destroy!
     redirect_to videos_path, notice: "Vídeo excluído."

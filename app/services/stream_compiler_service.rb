@@ -95,7 +95,7 @@ class StreamCompilerService
     )
     stream.update!(frames_count: 0)
 
-    Event.log(modulo: "video", rotulo: "video_created", valor: video.id, object_id: video.id,
+    Event.log(modulo: "video", rotulo: "video_created", valor: video.id, client_id: stream.client_id,
       metadata: { stream_name: stream.name, frames: image_count, duration: video.duration })
 
     # Send notification email now
@@ -107,7 +107,7 @@ class StreamCompilerService
     puts message
     stream.update(error_message: message)
 
-    Event.log(modulo: "video", rotulo: "compilation_failure", valor: stream.id, object_id: stream.id, metadata: { error: message })
+    Event.log(modulo: "video", rotulo: "compilation_failure", valor: stream.id, client_id: stream.client_id, metadata: { error: message })
   end
 
   def handle_error(message)
@@ -115,6 +115,6 @@ class StreamCompilerService
     puts error_msg
     stream.update(error_message: error_msg)
 
-    Event.log(modulo: "video", rotulo: "compilation_error", valor: stream.id, object_id: stream.id, metadata: { error: error_msg })
+    Event.log(modulo: "video", rotulo: "compilation_error", valor: stream.id, client_id: stream.client_id, metadata: { error: error_msg })
   end
 end

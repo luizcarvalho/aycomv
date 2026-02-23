@@ -1,6 +1,7 @@
 class Client < ApplicationRecord
   has_many :streams, dependent: :destroy
   has_many :videos, through: :streams
+  has_many :events, dependent: :nullify
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true

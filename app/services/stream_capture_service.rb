@@ -66,7 +66,7 @@ class StreamCaptureService
     # Truncate error message to fit in database if necessary
     stream.go_error(error_message: error_message.truncate(255))
 
-    Event.log(modulo: "stream", rotulo: "capture_failure", valor: stream.id, object_id: stream.id, metadata: { error: error_message.truncate(255) })
+    Event.log(modulo: "stream", rotulo: "capture_failure", valor: stream.id, client_id: stream.client_id, metadata: { error: error_message.truncate(255) })
   end
 
   def handle_error(message)
@@ -74,7 +74,7 @@ class StreamCaptureService
     Rails.logger.error error_msg
     stream.go_error(error_message: error_msg)
 
-    Event.log(modulo: "stream", rotulo: "capture_error", valor: stream.id, object_id: stream.id, metadata: { error: error_msg })
+    Event.log(modulo: "stream", rotulo: "capture_error", valor: stream.id, client_id: stream.client_id, metadata: { error: error_msg })
   end
 
   def update_preview(source_path)
@@ -91,7 +91,7 @@ class StreamCaptureService
       )
       puts "Updated preview for stream #{stream.id}"
 
-      Event.log(modulo: "stream", rotulo: "preview_updated", valor: stream.id, object_id: stream.id)
+      Event.log(modulo: "stream", rotulo: "preview_updated", valor: stream.id, client_id: stream.client_id)
     elsif stream.error_message.present?
       # Clear error message if capture was successful but we skipped preview update
       stream.update(error_message: nil)

@@ -38,11 +38,11 @@
       </div>
 
       <div class="events-filter-group">
-        <label class="events-filter-label">Object ID</label>
-        <%= f.number_field :object_id,
-            value: params[:object_id],
-            class: "events-filter-input",
-            placeholder: "ID..." %>
+        <label class="events-filter-label">Cliente</label>
+        <%= f.select :client_id,
+            options_from_collection_for_select(Client.alphabetically, :id, :name, params[:client_id]),
+            { include_blank: "Todos" },
+            { class: "events-filter-select", onchange: 'this.form.requestSubmit()' } %>
       </div>
 
       <div class="events-filter-group">
@@ -78,7 +78,7 @@
           <th>Módulo</th>
           <th>Rótulo</th>
           <th>Valor</th>
-          <th>Object ID</th>
+          <th>Cliente</th>
           <th>Metadata</th>
         </tr>
       </thead>
@@ -92,8 +92,8 @@
             <td class="events-rotulo"><%= event.rotulo %></td>
             <td class="events-valor"><%= event.valor %></td>
             <td>
-              <% if event.object_id.present? %>
-                <%= link_to event.object_id, events_path(modulo: event.modulo, object_id: event.object_id), class: "events-object-link" %>
+              <% if event.client.present? %>
+                <%= link_to event.client.name, events_path(client_id: event.client_id), class: "events-object-link" %>
               <% end %>
             </td>
             <td class="events-metadata">
