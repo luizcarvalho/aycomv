@@ -20,6 +20,7 @@ class StreamCompilerService
 
   attr_reader :stream, :date
 
+  # Create Events for No images and Not enough images
   def input_directory
     @input_directory ||= Rails.root.join("storage", "streams", stream.id.to_s, date.to_s)
   end
@@ -27,6 +28,7 @@ class StreamCompilerService
   def input_directory_exists?
     unless Dir.exist?(input_directory)
       puts "No images found for stream #{stream.id} on #{date}"
+      Event.log(modulo: "video", rotulo: "compilation_error", valor: stream.id, client_id: stream.client_id, metadata: { error: "No images found for stream #{stream.id} on #{date}" })
       return false
     end
     true
@@ -36,6 +38,7 @@ class StreamCompilerService
     count = image_count
     if count < 10
       puts "Not enough images (#{count}) for stream #{stream.id}"
+      Event.log(modulo: "video", rotulo: "compilation_error", valor: stream.id, client_id: stream.client_id, metadata: { error: "Not enough images (#{count}) for stream #{stream.id}" })
       return false
     end
     true
