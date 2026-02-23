@@ -2,33 +2,72 @@
 
 <div class="page-header">
   <h2 class="page-title">Eventos</h2>
-  <div class="page-actions">
-    <%= form_with url: events_path, method: :get, class: "form-inline" do |f| %>
-      <div class="filter-toolbar">
+</div>
+
+<div class="events-filter-panel">
+  <%= form_with url: events_path, method: :get, class: "events-filter-form" do |f| %>
+    <div class="events-filter-grid">
+      <div class="events-filter-group">
+        <label class="events-filter-label">Módulo</label>
         <%= f.select :modulo,
             options_for_select([
-              ["Todos os Módulos", nil],
+              ["Todos", nil],
               ["Stream", "stream"],
               ["Video", "video"],
               ["Client", "client"],
               ["Notification", "notification"]
             ], params[:modulo]),
             {},
-            { class: "filter-input", onchange: 'this.form.requestSubmit()' } %>
-
-        <% if params[:object_id].present? %>
-          <%= f.hidden_field :object_id, value: params[:object_id] %>
-          <span class="filter-tag">
-            ID: <%= params[:object_id] %>
-            <%= link_to "✕", events_path(modulo: params[:modulo]), class: "filter-tag-remove" %>
-          </span>
-        <% end %>
+            { class: "events-filter-select", onchange: 'this.form.requestSubmit()' } %>
       </div>
-    <% end %>
-  </div>
+
+      <div class="events-filter-group">
+        <label class="events-filter-label">Rótulo</label>
+        <%= f.text_field :rotulo,
+            value: params[:rotulo],
+            class: "events-filter-input",
+            placeholder: "Buscar rótulo..." %>
+      </div>
+
+      <div class="events-filter-group">
+        <label class="events-filter-label">Valor</label>
+        <%= f.text_field :valor,
+            value: params[:valor],
+            class: "events-filter-input",
+            placeholder: "Buscar valor..." %>
+      </div>
+
+      <div class="events-filter-group">
+        <label class="events-filter-label">Object ID</label>
+        <%= f.number_field :object_id,
+            value: params[:object_id],
+            class: "events-filter-input",
+            placeholder: "ID..." %>
+      </div>
+
+      <div class="events-filter-group">
+        <label class="events-filter-label">Data de</label>
+        <%= f.date_field :date_from,
+            value: params[:date_from],
+            class: "events-filter-input" %>
+      </div>
+
+      <div class="events-filter-group">
+        <label class="events-filter-label">Data até</label>
+        <%= f.date_field :date_to,
+            value: params[:date_to],
+            class: "events-filter-input" %>
+      </div>
+    </div>
+
+    <div class="events-filter-actions">
+      <%= f.submit "Filtrar", class: "btn btn-primary btn-sm" %>
+      <%= link_to "Limpar", events_path, class: "btn btn-ghost btn-sm" %>
+    </div>
+  <% end %>
 </div>
 
-<p class="page-subtitle" style="margin-bottom: var(--space-4);"><%= @events.count %> eventos registrados</p>
+<p class="events-count"><%= @events.count %> eventos encontrados</p>
 
 <% if @events.any? %>
   <div class="events-table-wrapper">
@@ -45,13 +84,13 @@
       </thead>
       <tbody>
         <% @events.each do |event| %>
-          <tr>
+          <tr class="events-row">
             <td class="events-timestamp"><%= event.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
             <td>
               <span class="events-badge events-badge-<%= event.modulo %>"><%= event.modulo %></span>
             </td>
             <td class="events-rotulo"><%= event.rotulo %></td>
-            <td><%= event.valor %></td>
+            <td class="events-valor"><%= event.valor %></td>
             <td>
               <% if event.object_id.present? %>
                 <%= link_to event.object_id, events_path(modulo: event.modulo, object_id: event.object_id), class: "events-object-link" %>

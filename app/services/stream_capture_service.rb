@@ -55,8 +55,6 @@ class StreamCaptureService
     stream.last_error_at = nil
     stream.save!
 
-    Event.log(modulo: "stream", rotulo: "snapshot_captured", valor: stream.id, object_id: stream.id, metadata: { path: path.to_s })
-
     update_preview(path)
   end
 
