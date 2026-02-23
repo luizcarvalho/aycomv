@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_22_190001) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_23_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_22_190001) do
     t.boolean "notify_on_generate", default: true, null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_clients_on_email", unique: true
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.jsonb "metadata", default: {}
+    t.string "modulo", null: false
+    t.integer "object_id"
+    t.string "rotulo", null: false
+    t.datetime "updated_at", null: false
+    t.string "valor"
+    t.index ["created_at"], name: "index_events_on_created_at"
+    t.index ["modulo"], name: "index_events_on_modulo"
+    t.index ["object_id"], name: "index_events_on_object_id"
   end
 
   create_table "sessions", force: :cascade do |t|

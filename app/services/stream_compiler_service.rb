@@ -95,6 +95,9 @@ class StreamCompilerService
     )
     stream.update!(frames_count: 0)
 
+    Event.log(modulo: "video", rotulo: "video_created", valor: video.id, object_id: video.id,
+      metadata: { stream_name: stream.name, frames: image_count, duration: video.duration })
+
     # Send notification email now
     VideoMailer.with(video: video).notification_email.deliver_now
   end
@@ -103,11 +106,15 @@ class StreamCompilerService
     message = "FFmpeg failed for stream #{stream.id}"
     puts message
     stream.update(error_message: message)
+
+    Event.log(modulo: "video", rotulo: "compilation_failure", valor: stream.id, object_id: stream.id, metadata: { error: message })
   end
 
   def handle_error(message)
     error_msg = "Error compiling stream #{stream.id}: #{message}"
     puts error_msg
     stream.update(error_message: error_msg)
+
+    Event.log(modulo: "video", rotulo: "compilation_error", valor: stream.id, object_id: stream.id, metadata: { error: error_msg })
   end
 end

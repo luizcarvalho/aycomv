@@ -20,7 +20,7 @@
     <% end %>
 
     <div class="stream-meta">
-      <code class="stream-url" title="<%= stream.url %>"><%= truncate(stream.url, length: -40) %></code>
+      <code class="stream-url" title="<%= stream.url %>"><%= "...#{stream.url[-20..]}" %></code>
     </div>
 
     <div class="stream-stats" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);">

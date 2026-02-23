@@ -18,6 +18,7 @@ class StreamsController < ApplicationController
 
   def create
     @stream = Stream.create!(stream_params)
+    Event.log(modulo: "stream", rotulo: "stream_created", valor: @stream.id, object_id: @stream.id, metadata: { name: @stream.name })
     redirect_to streams_path, notice: "Stream adicionado com sucesso!"
   end
 
@@ -27,10 +28,12 @@ class StreamsController < ApplicationController
 
   def update
     @stream.update!(stream_params)
+    Event.log(modulo: "stream", rotulo: "stream_updated", valor: @stream.id, object_id: @stream.id, metadata: { name: @stream.name })
     redirect_to streams_path, notice: "Alterações salvas com sucesso!"
   end
 
   def destroy
+    Event.log(modulo: "stream", rotulo: "stream_destroyed", valor: @stream.id, object_id: @stream.id, metadata: { name: @stream.name })
     @stream.destroy!
     redirect_to streams_path, notice: "Stream excluído."
   end

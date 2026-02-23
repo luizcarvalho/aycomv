@@ -1,0 +1,13 @@
+one:
+  modulo: stream
+  rotulo: snapshot_captured
+  valor: "1"
+  object_id: 1
+  metadata: { path: "/storage/streams/1/2026-02-22/120000.jpg" }
+
+two:
+  modulo: video
+  rotulo: video_created
+  valor: "1"
+  object_id: 1
+  metadata: { title: "Camera 1", frames: 300, duration: 10 }

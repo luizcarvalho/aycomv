@@ -15,4 +15,5 @@ Rails.application.routes.draw do
     resource :status_toggle, only: :create, module: :streams
   end
   resources :videos, only: %i[ index destroy ]
+  resources :events, only: :index
 end

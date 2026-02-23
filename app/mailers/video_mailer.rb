@@ -8,5 +8,8 @@ class VideoMailer < ApplicationMailer
     mail(to: @client.email, subject: "Seu vídeo foi processado com sucesso! 🎥") do |format|
       format.html { render layout: false }
     end
+
+    Event.log(modulo: "notification", rotulo: "email_sent", valor: @video.id, object_id: @video.id,
+      metadata: { to: @client.email, subject: "Seu vídeo foi processado com sucesso! 🎥" })
   end
 end
