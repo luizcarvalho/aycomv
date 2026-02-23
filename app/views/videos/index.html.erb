@@ -46,7 +46,7 @@
   <% if @videos.any? %>
     <div class="videos-grid">
       <% @videos.each do |video| %>
-        <div id="<%= dom_id(video) %>" class="video-card">
+        <div id="<%= dom_id(video) %>" class="video-card" data-controller="modal" data-action="keydown@window->modal#closeOnEscape">
           <div class="video-thumbnail">
             <% if video.file_path.present? %>
               <video
@@ -80,6 +80,8 @@
           </div>
 
           <div class="video-actions">
+            <button class="btn btn-ghost btn-sm" data-action="click->modal#open">Detalhes</button>
+
             <% if video.file_path.present? %>
               <a href="<%= video.file_path %>" download class="btn btn-ghost btn-sm" title="Baixar Vídeo">
                 Baixar
@@ -97,6 +99,75 @@
                   method: :delete,
                   class: "btn btn-danger-ghost btn-sm",
                   data: { turbo_confirm: "Excluir este vídeo?" } %>
+          </div>
+
+          <div class="modal-overlay" data-modal-target="overlay" data-action="click->modal#closeOnBackdrop">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3>Detalhes do Vídeo</h3>
+                <button class="modal-close" data-action="click->modal#close">✕</button>
+              </div>
+              <div class="modal-body">
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">ID</span>
+                  <span class="modal-detail-value"><%= video.id %></span>
+                </div>
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">Stream</span>
+                  <span class="modal-detail-value"><%= video.stream_name %></span>
+                </div>
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">Stream ID</span>
+                  <span class="modal-detail-value"><%= video.stream_id %></span>
+                </div>
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">Cliente</span>
+                  <span class="modal-detail-value"><%= video.client.name %></span>
+                </div>
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">Data</span>
+                  <span class="modal-detail-value"><%= video.date.strftime("%d/%m/%Y") %></span>
+                </div>
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">Duração</span>
+                  <span class="modal-detail-value"><%= video.duration %>s</span>
+                </div>
+                <% if video.generated_at.present? %>
+                  <div class="modal-detail-row">
+                    <span class="modal-detail-label">Gerado em</span>
+                    <span class="modal-detail-value"><%= video.generated_at.strftime("%d/%m/%Y %H:%M") %></span>
+                  </div>
+                <% end %>
+                <% if video.file_path.present? %>
+                  <div class="modal-detail-row">
+                    <span class="modal-detail-label">Caminho</span>
+                    <span class="modal-detail-value"><%= video.file_path %></span>
+                  </div>
+                <% end %>
+                <% if video.thumbnail_url.present? %>
+                  <div class="modal-detail-row">
+                    <span class="modal-detail-label">Thumbnail</span>
+                    <span class="modal-detail-value"><%= video.thumbnail_url %></span>
+                  </div>
+                <% end %>
+                <% if video.share_link.present? %>
+                  <div class="modal-detail-row">
+                    <span class="modal-detail-label">Link compartilhamento</span>
+                    <span class="modal-detail-value"><%= video.share_link %></span>
+                  </div>
+                <% end %>
+                <% if video.note.present? %>
+                  <div class="modal-detail-row">
+                    <span class="modal-detail-label">Nota</span>
+                    <span class="modal-detail-value"><%= video.note %></span>
+                  </div>
+                <% end %>
+                <div class="modal-detail-row">
+                  <span class="modal-detail-label">Criado em</span>
+                  <span class="modal-detail-value"><%= video.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       <% end %>

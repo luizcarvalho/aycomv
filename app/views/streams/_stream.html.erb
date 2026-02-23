@@ -1,4 +1,4 @@
-<div id="<%= dom_id(stream) %>" class="stream-card">
+<div id="<%= dom_id(stream) %>" class="stream-card" data-controller="modal" data-action="keydown@window->modal#closeOnEscape">
   <div class="stream-preview">
     <% if stream.preview_url.present? %>
       <img src="<%= stream.preview_url %>" alt="<%= stream.name %>" loading="lazy">
@@ -20,7 +20,7 @@
     <% end %>
 
     <div class="stream-meta">
-      <code class="stream-url" title="<%= stream.url %>"><%= truncate(stream.url, length: 40) %></code>
+      <code class="stream-url" title="<%= stream.url %>"><%= truncate(stream.url, length: -40) %></code>
     </div>
 
     <div class="stream-stats" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);">
@@ -35,6 +35,8 @@
   </div>
 
   <div class="stream-actions">
+    <button class="btn btn-ghost btn-sm" data-action="click->modal#open">Detalhes</button>
+
     <%= button_to stream_status_toggle_path(stream),
           method: :post,
           class: "btn btn-sm #{stream.online? ? 'btn-warning' : 'btn-success'}",
@@ -49,5 +51,72 @@
           method: :delete,
           class: "btn btn-danger-ghost btn-sm",
           data: { turbo_confirm: "Excluir #{stream.name}? Os vídeos vinculados serão removidos." } %>
+  </div>
+
+  <div class="modal-overlay" data-modal-target="overlay" data-action="click->modal#closeOnBackdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detalhes do Stream</h3>
+        <button class="modal-close" data-action="click->modal#close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">ID</span>
+          <span class="modal-detail-value"><%= stream.id %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Nome</span>
+          <span class="modal-detail-value"><%= stream.name %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Cliente</span>
+          <span class="modal-detail-value"><%= stream.client.name %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Cliente ID</span>
+          <span class="modal-detail-value"><%= stream.client_id %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">URL</span>
+          <span class="modal-detail-value"><%= stream.url %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Status</span>
+          <span class="modal-detail-value"><%= stream.status.capitalize %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Frames</span>
+          <span class="modal-detail-value"><%= number_with_delimiter stream.frames_count %></span>
+        </div>
+        <% if stream.last_frame_at %>
+          <div class="modal-detail-row">
+            <span class="modal-detail-label">Último frame</span>
+            <span class="modal-detail-value"><%= stream.last_frame_at.strftime("%d/%m/%Y %H:%M") %></span>
+          </div>
+        <% end %>
+        <% if stream.last_error_at %>
+          <div class="modal-detail-row">
+            <span class="modal-detail-label">Último erro</span>
+            <span class="modal-detail-value"><%= stream.last_error_at.strftime("%d/%m/%Y %H:%M") %></span>
+          </div>
+        <% end %>
+        <% if stream.error_message.present? %>
+          <div class="modal-detail-row">
+            <span class="modal-detail-label">Mensagem de erro</span>
+            <span class="modal-detail-value"><%= stream.error_message %></span>
+          </div>
+        <% end %>
+        <% if stream.preview_url.present? %>
+          <div class="modal-detail-row">
+            <span class="modal-detail-label">Preview URL</span>
+            <span class="modal-detail-value"><%= stream.preview_url %></span>
+          </div>
+        <% end %>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Criado em</span>
+          <span class="modal-detail-value"><%= stream.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
