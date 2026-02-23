@@ -98,7 +98,9 @@
             </td>
             <td class="events-metadata">
               <% if event.metadata.present? && event.metadata.any? %>
-                <code><%= event.metadata.to_json %></code>
+                <div title="<%= event.metadata.to_json %>">
+                  <code><%= event.metadata.to_json %></code>
+                </div>
               <% end %>
             </td>
           </tr>
