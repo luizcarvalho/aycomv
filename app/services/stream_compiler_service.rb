@@ -101,8 +101,15 @@ class StreamCompilerService
     Event.log(modulo: "video", rotulo: "video_created", valor: stream.id, client_id: stream.client_id,
       metadata: { stream_name: stream.name, frames: image_count, duration: video.duration })
 
-    # Send notification email now
+   send_mail(video)
+  end
+
+  def send_mail(video)
     VideoMailer.with(video: video).notification_email.deliver_now
+  rescue StandardError => e
+    Rails.logger.error "Failed to send email for video #{video.id}: #{e.message}"
+    Event.log(modulo: "notification", rotulo: "email_failure", valor: video.id, client_id: video.stream.client_id,
+      metadata: { error: e.message })
   end
 
   def handle_failure
