@@ -91,7 +91,7 @@ class StreamCaptureService
       )
       puts "Updated preview for stream #{stream.id}"
 
-      Event.log(modulo: "stream", rotulo: "preview_updated", valor: stream.id, client_id: stream.client_id)
+      Event.log(modulo: "stream", rotulo: "preview_updated", valor: stream.name, client_id: stream.client_id, metadata: { id: stream.id })
     elsif stream.error_message.present?
       # Clear error message if capture was successful but we skipped preview update
       stream.update(error_message: nil)

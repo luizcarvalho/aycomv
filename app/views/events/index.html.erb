@@ -20,6 +20,22 @@
             {},
             { class: "events-filter-select", onchange: 'this.form.requestSubmit()' } %>
       </div>
+      <div>
+        <label class="events-filter-label">Rótulos (lista)</label>
+        <%= f.select :rotulo,
+              options_for_select([
+                ["Todos", nil],
+                ["capture_failure", "capture_failure"],
+                ['preview_updated', 'preview_updated'],
+                ["capture_error", "capture_error"],
+                ["compilation_error", "compilation_error"],
+                ["compilation_failure", "compilation_failure"],
+                ["email_sent", "email_sent"],
+                ['video_created', 'video_created']
+            ], params[:rotulo]),
+            {},
+            { class: "events-filter-select", onchange: 'this.form.requestSubmit()' } %>
+      </div>
 
       <div class="events-filter-group">
         <label class="events-filter-label">Rótulo</label>
@@ -28,6 +44,8 @@
             class: "events-filter-input",
             placeholder: "Buscar rótulo..." %>
       </div>
+
+      
 
       <div class="events-filter-group">
         <label class="events-filter-label">Valor</label>
@@ -98,9 +116,7 @@
             </td>
             <td class="events-metadata">
               <% if event.metadata.present? && event.metadata.any? %>
-                <div title="<%= event.metadata.to_json %>">
-                  <code><%= event.metadata.to_json %></code>
-                </div>
+                  <code title="<%= event.metadata.to_json %>" ><%= event.metadata.to_json %></code>
               <% end %>
             </td>
           </tr>

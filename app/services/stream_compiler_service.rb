@@ -98,7 +98,7 @@ class StreamCompilerService
     )
     stream.update!(frames_count: 0)
 
-    Event.log(modulo: "video", rotulo: "video_created", valor: video.id, client_id: stream.client_id,
+    Event.log(modulo: "video", rotulo: "video_created", valor: stream.id, client_id: stream.client_id,
       metadata: { stream_name: stream.name, frames: image_count, duration: video.duration })
 
     # Send notification email now
