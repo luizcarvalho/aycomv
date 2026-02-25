@@ -23,6 +23,8 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
+ENV TZ="America/Araguaina"
+
 # Install common runtime packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
@@ -30,6 +32,7 @@ RUN apt-get update -qq && \
     libvips \
     ffmpeg \
     postgresql-client \
+    tzdata \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Common environment
