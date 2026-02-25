@@ -2,7 +2,7 @@ namespace :email do
   desc "Send a test email to maximusmano@gmail.com"
   task test: :environment do
     puts "Sending test email to maximusmano@gmail.com..."
-    @download_url = "#{ENV['HOST_URL']}/#{@video.file_path}"
+    @download_url = ENV["HOST_URL"]
 
     ActionMailer::Base.mail(
       from: ENV.fetch("MAILER_SENDER", "from@example.com"),
