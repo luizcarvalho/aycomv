@@ -53,22 +53,22 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # Raise delivery errors to catch email issues early.
+  config.action_mailer.raise_delivery_errors = true
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: "aycom.com.br" }
 
-  # config.action_mailer.smtp_settings = {
-  #   user_name: ENV.fetch("SENDGRID_USERNAME"),
-  #   password: ENV.fetch("SENDGRID_PASSWORD"),
-  #   domain: "investobra.com.br",
-  #   address: "smtp.sendgrid.net",
-  #   port: 587,
-  #   authentication: :plain,
-  #   enable_starttls_auto: true
-  # }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    user_name: ENV.fetch("SENDGRID_USERNAME"),
+    password: ENV.fetch("SENDGRID_PASSWORD"),
+    domain: "aycom.com.br",
+    address: "smtp.sendgrid.net",
+    port: 587,
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
