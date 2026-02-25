@@ -65,7 +65,7 @@ Rails.application.configure do
     password: ENV.fetch("SENDGRID_PASSWORD", ""),
     domain: "aycom.com.br",
     address: "smtp.sendgrid.net",
-    port: 587,
+    port: 2525,
     authentication: :plain,
     enable_starttls_auto: true
   }
