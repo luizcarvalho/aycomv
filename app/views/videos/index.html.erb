@@ -41,30 +41,25 @@
 </div>
 
 <%= turbo_frame_tag "videos_list" do %>
-  <p class="page-subtitle" style="margin-bottom: var(--space-4);"><%= @videos.count %> vídeos gerados</p>
+  <p class="page-subtitle" style="margin-bottom: var(--space-4);"><%= @pagy.count %> vídeos gerados</p>
 
   <% if @videos.any? %>
     <div class="videos-grid">
       <% @videos.each do |video| %>
         <div id="<%= dom_id(video) %>" class="video-card" data-controller="modal" data-action="keydown@window->modal#closeOnEscape">
           <div class="video-thumbnail">
-            <% if video.file_path.present? %>
-              <video
-                src="<%= video.file_path %>"
-                poster="<%= video.thumbnail_url %>"
-                controls
-                preload="none"
-                width="100%"
-                height="100%"
-                playsinline
-                class="video-player">
-              </video>
-            <% elsif video.thumbnail_url.present? %>
-              <img src="<%= video.thumbnail_url %>" alt="Timelapse <%= video.stream_name %>" loading="lazy">
+            <% thumb = video.thumbnail_url.presence || video.stream.preview_url %>
+            <% if thumb.present? %>
+              <img src="<%= thumb %>" alt="Timelapse <%= video.stream_name %>" loading="lazy">
             <% else %>
               <div class="video-thumbnail-placeholder">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
               </div>
+            <% end %>
+            <% if video.file_path.present? %>
+              <a href="<%= video.file_path %>" target="_blank" class="video-play-overlay" title="Reproduzir vídeo">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M8 5v14l11-7z"/></svg>
+              </a>
             <% end %>
             <span class="video-duration"><%= "#{video.duration}s" %></span>
           </div>

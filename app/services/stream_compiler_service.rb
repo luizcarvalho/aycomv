@@ -76,6 +76,7 @@ class StreamCompilerService
     success = system(cmd)
 
     if success && File.exist?(output_path)
+      generate_thumbnail
       create_video_record
       puts "Successfully created video: #{output_path}"
     else
@@ -87,13 +88,29 @@ class StreamCompilerService
     FileUtils.mkdir_p(output_dir)
   end
 
+  def thumbnail_filename
+    @thumbnail_filename ||= output_filename.sub(".mp4", ".jpg")
+  end
+
+  def thumbnail_path
+    @thumbnail_path ||= output_dir.join(thumbnail_filename)
+  end
+
+  def generate_thumbnail
+    puts "Generating thumbnail for stream #{stream.id}"
+    seek_time = [ (image_count / 30) / 2, 1 ].max
+    cmd = "ffmpeg -y -ss #{seek_time} -i \"#{output_path}\" -frames:v 1 -q:v 2 \"#{thumbnail_path}\" > /dev/null 2>&1"
+    system(cmd)
+  end
+
   def create_video_record
     video = Video.create!(
       stream: stream,
       date: date,
       created_at: Time.now,
-      file_path: "/videos/#{stream.id}/#{output_filename}", # Relative path for public access
-      duration: image_count / 30, # Approx duration
+      file_path: "/videos/#{stream.id}/#{output_filename}",
+      thumbnail_url: File.exist?(thumbnail_path) ? "/videos/#{stream.id}/#{thumbnail_filename}" : nil,
+      duration: image_count / 30,
       generated_at: Time.now
     )
     stream.update!(frames_count: 0)

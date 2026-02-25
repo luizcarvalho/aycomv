@@ -1230,6 +1230,7 @@
     aspect-ratio: 16 / 9;
     background: oklch(92% 0.005 260);
     overflow: hidden;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
     & img,
     & video {
@@ -1237,6 +1238,29 @@
       height: 100%;
       object-fit: cover;
     }
+  }
+
+  .video-play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: oklch(0% 0 0 / 0.3);
+    color: white;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    text-decoration: none;
+
+    & svg {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .video-thumbnail:hover .video-play-overlay {
+    opacity: 1;
   }
 
   .video-thumbnail-placeholder {

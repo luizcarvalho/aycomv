@@ -8,7 +8,7 @@ class VideosController < ApplicationController
     @videos = @videos.by_date(params[:date]) if params[:date].present?
     @videos = @videos.sorted_by(params[:sort])
 
-    @pagy, @videos = pagy(@videos)
+    @pagy, @videos = pagy(@videos, limit: 12)
   end
 
   def destroy

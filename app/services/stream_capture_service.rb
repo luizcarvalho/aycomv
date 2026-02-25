@@ -78,12 +78,12 @@ class StreamCaptureService
   end
 
   def update_preview(source_path)
-    # Update preview (Rate limit: 4 minutes)
+    # Update preview (Rate limit: 30 minutes)
     preview_dir = Rails.root.join("public", "previews")
     FileUtils.mkdir_p(preview_dir)
     preview_path = preview_dir.join("#{stream.id}.jpg")
 
-    if !File.exist?(preview_path) || (Time.now - File.mtime(preview_path) > 240)
+    if !File.exist?(preview_path) || (Time.now - File.mtime(preview_path) > 1800)
       FileUtils.cp(source_path, preview_path)
       stream.update(
         preview_url: "/previews/#{stream.id}.jpg?t=#{Time.now.to_i}",
