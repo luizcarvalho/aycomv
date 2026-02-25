@@ -4,12 +4,20 @@ namespace :email do
     puts "Sending test email to maximusmano@gmail.com..."
     @download_url = ENV["HOST_URL"]
 
-    ActionMailer::Base.mail(
-      from: ENV.fetch("MAILER_SENDER", "from@example.com"),
-      to: "maximusmano@gmail.com",
-      subject: "Teste de envio de e-mail - AycomV 🎥",
-      body: "Este é um e-mail de teste enviado em #{Time.current.strftime('%d/%m/%Y %H:%M:%S')}.\n\nSe você está lendo esta mensagem, o envio de e-mail está funcionando corretamente! ✅\n\nDownload URL: #{@download_url}"
-    ).deliver_now
+    TestMailer = Class.new(ApplicationMailer) do
+      def test_email(download_url)
+        mail(
+          to: "maximusmano@gmail.com",
+          subject: "Teste de envio de e-mail - AycomV 🎥"
+        ) do |format|
+          format.text do
+            render plain: "Este é um e-mail de teste enviado em #{Time.current.strftime('%d/%m/%Y %H:%M:%S')}.\n\nSe você está lendo esta mensagem, o envio de e-mail está funcionando corretamente! ✅\n\nDownload URL: #{download_url}"
+          end
+        end
+      end
+    end
+
+    TestMailer.test_email(@download_url).deliver_now
 
     puts "✅ Test email sent successfully!"
   rescue StandardError => e
