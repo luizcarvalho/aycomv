@@ -44,6 +44,10 @@ env:
     - KAMAL_REGISTRY_PASSWORD
     - DATABASE_PASSWORD
     - DATABASE_USER
+    - SENDGRID_USERNAME
+    - SENDGRID_PASSWORD
+    - MAILER_SENDER
+    - HOST_URL
 
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
