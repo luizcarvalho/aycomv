@@ -118,7 +118,10 @@ class StreamCompilerService
     Event.log(modulo: "video", rotulo: "video_created", valor: stream.id, client_id: stream.client_id,
       metadata: { stream_name: stream.name, frames: image_count, duration: video.duration })
 
-   send_mail(video)
+    # Só envia e-mail se o cliente quiser ser notificado
+    if stream.client.notify_on_generate?
+      send_mail(video)
+    end
   end
 
   def send_mail(video)
