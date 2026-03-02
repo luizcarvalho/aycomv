@@ -6,6 +6,8 @@ class Video < ApplicationRecord
 
   validates :date, presence: true
 
+  before_destroy :delete_files
+
   scope :reverse_chronologically, -> { order(generated_at: :desc) }
   scope :for_client, ->(client) { joins(:stream).where(streams: { client_id: client.id }) }
   scope :for_client_id, ->(client_id) { joins(:stream).where(streams: { client_id: client_id }) }
@@ -24,5 +26,19 @@ class Video < ApplicationRecord
     else
       order(generated_at: :desc)
     end
+  end
+
+  private
+
+  def delete_files
+    video_file = Rails.root.join("public", file_path.delete_prefix("/")) if file_path.present?
+    thumb_file = Rails.root.join("public", thumbnail_url.delete_prefix("/")) if thumbnail_url.present?
+
+    File.delete(video_file) if video_file && File.exist?(video_file)
+    File.delete(thumb_file) if thumb_file && File.exist?(thumb_file)
+  rescue StandardError => e
+    Rails.logger.error "Failed to delete files for video #{id}: #{e.message}"
+    errors.add(:base, "Falha ao excluir arquivos: #{e.message}")
+    throw :abort
   end
 end
