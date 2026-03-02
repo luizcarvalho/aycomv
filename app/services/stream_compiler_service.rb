@@ -69,9 +69,13 @@ class StreamCompilerService
     # FFmpeg command to stitch images
     # -pattern_type glob: use glob pattern for input
     # -framerate 30: 30 fps
-    # -c:v libx264: H.264 codec
+    # -c:v libx265: H.265/HEVC codec (40-50% smaller than H.264 at same quality)
+    # -crf 28: Constant Rate Factor (visually lossless for H.265, equivalent to H.264 CRF ~23)
+    # -preset slow: Better compression ratio (slower encoding, smaller files)
+    # -tag:v hvc1: Ensures compatibility with Apple/Safari players
     # -pix_fmt yuv420p: Ensure compatibility with all players
-    cmd = "ffmpeg -y -framerate 30 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx264 -pix_fmt yuv420p \"#{output_path}\" > /dev/null 2>&1"
+    # -movflags +faststart: Optimize for web streaming (metadata at start of file)
+    cmd = "ffmpeg -y -framerate 30 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx265 -crf 28 -preset slow -tag:v hvc1 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
 
     success = system(cmd)
 
@@ -113,10 +117,10 @@ class StreamCompilerService
       duration: image_count / 30,
       generated_at: Time.now
     )
-    stream.update!(frames_count: 0)
+    zero_frame = stream.update!(frames_count: 0)
 
     Event.log(modulo: "video", rotulo: "video_created", valor: stream.id, client_id: stream.client_id,
-      metadata: { stream_name: stream.name, frames: image_count, duration: video.duration })
+      metadata: { stream_name: stream.name, frames: image_count, duration: video.duration, zero_frame: zero_frame })
 
     # Só envia e-mail se o cliente quiser ser notificado
     if stream.client.notify_on_generate?
