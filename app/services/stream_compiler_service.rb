@@ -75,7 +75,7 @@ class StreamCompilerService
     # -tag:v hvc1: Ensures compatibility with Apple/Safari players
     # -pix_fmt yuv420p: Ensure compatibility with all players
     # -movflags +faststart: Optimize for web streaming (metadata at start of file)
-    cmd = "ffmpeg -y -framerate 30 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx265 -crf 28 -preset slow -tag:v hvc1 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
+    cmd = "ffmpeg -y -framerate 24 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx265 -crf 28 -preset slow -tag:v hvc1 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
 
     success = system(cmd)
 
