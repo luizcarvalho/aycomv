@@ -68,13 +68,14 @@ class StreamCompilerService
 
     # FFmpeg command to stitch images
     # -pattern_type glob: use glob pattern for input
-    # -framerate 30: 30 fps
-    # -c:v libx265: H.265/HEVC codec (40-50% smaller than H.264 at same quality)
-    # -crf 28: Constant Rate Factor (visually lossless for H.265, equivalent to H.264 CRF ~23)
+    # -framerate 24: 24 fps
+    # -c:v libx264: H.264 codec (universal browser support, unlike H.265)
+    # -crf 28: Constant Rate Factor (good quality with small file size)
     # -preset slow: Better compression ratio (slower encoding, smaller files)
-    # -tag:v hvc1: Ensures compatibility with Apple/Safari players
+    # -profile:v high -level 4.0: Maximum compatibility across browsers/devices
     # -pix_fmt yuv420p: Ensure compatibility with all players
-    cmd = "ffmpeg -y -framerate 24 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx265 -crf 28 -preset slow -tag:v hvc1 -pix_fmt yuv420p \"#{output_path}\" > /dev/null 2>&1"
+    # -movflags +faststart: Move moov atom to start for progressive browser playback
+    cmd = "ffmpeg -y -framerate 24 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx264 -crf 28 -preset slow -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
 
     success = system(cmd)
 
