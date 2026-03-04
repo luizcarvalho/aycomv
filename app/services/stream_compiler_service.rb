@@ -75,7 +75,8 @@ class StreamCompilerService
     # -profile:v high -level 4.0: Maximum compatibility across browsers/devices
     # -pix_fmt yuv420p: Ensure compatibility with all players
     # -movflags +faststart: Move moov atom to start for progressive browser playback
-    cmd = "ffmpeg -y -framerate 30 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx264 -crf 28 -preset slow -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
+    @ffmpeg_cmd = "ffmpeg -y -framerate 30 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx264 -crf 28 -preset slow -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
+    cmd = @ffmpeg_cmd
 
     success = system(cmd)
 
@@ -120,7 +121,7 @@ class StreamCompilerService
     zero_frame = stream.update!(frames_count: 0)
 
     Event.log(modulo: "video", rotulo: "video_created", valor: stream.id, client_id: stream.client_id,
-      metadata: { stream_name: stream.name, frames: image_count, duration: video.duration, zero_frame: zero_frame })
+      metadata: { stream_name: stream.name, frames: image_count, duration: video.duration, zero_frame: zero_frame, ffmpeg_cmd: @ffmpeg_cmd })
 
     # Só envia e-mail se o cliente quiser ser notificado
     if stream.client.notify_on_generate?
