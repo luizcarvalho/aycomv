@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_23_191300) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,7 +20,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_191300) do
     t.string "name", null: false
     t.boolean "notify_on_generate", default: true, null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_clients_on_email", unique: true
+    t.index ["email"], name: "index_clients_on_email"
   end
 
   create_table "events", force: :cascade do |t|
@@ -46,6 +46,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_191300) do
   end
 
   create_table "streams", force: :cascade do |t|
+    t.time "capture_end_time"
+    t.time "capture_start_time"
     t.bigint "client_id", null: false
     t.datetime "created_at", null: false
     t.string "error_message"

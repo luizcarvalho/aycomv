@@ -2,7 +2,7 @@
   <td>
     <div class="cell-primary"><%= client.name %></div>
   </td>
-  <td><%= client.email %></td>
+  <td><%= safe_join(client.notification_emails, tag.br) %></td>
   <td>
     <span class="badge badge-info"><%= client.streams.count %> streams</span>
   </td>

@@ -1,6 +1,7 @@
 class StreamCompilerService
   require "securerandom"
   require "fileutils"
+  require "tmpdir"
 
   def initialize(stream, date)
     @stream = stream
@@ -45,7 +46,7 @@ class StreamCompilerService
   end
 
   def image_count
-    @image_count ||= Dir[input_directory.join("*.jpg")].count
+    @image_count ||= selected_images.count
   end
 
   def output_dir
@@ -65,27 +66,28 @@ class StreamCompilerService
     ensure_output_directory_exists
 
     puts "Compiling #{image_count} images for stream #{stream.id}..."
+    Dir.mktmpdir(["stream-compile-", stream.id.to_s], Rails.root.join("tmp")) do |compile_directory|
+      prepare_compile_directory(compile_directory)
 
-    # FFmpeg command to stitch images
-    # -pattern_type glob: use glob pattern for input
-    # -framerate 24: 24 fps
-    # -c:v libx264: H.264 codec (universal browser support, unlike H.265)
-    # -crf 28: Constant Rate Factor (good quality with small file size)
-    # -preset slow: Better compression ratio (slower encoding, smaller files)
-    # -profile:v high -level 4.0: Maximum compatibility across browsers/devices
-    # -pix_fmt yuv420p: Ensure compatibility with all players
-    # -movflags +faststart: Move moov atom to start for progressive browser playback
-    @ffmpeg_cmd = "ffmpeg -y -framerate 30 -pattern_type glob -i \"#{input_directory}/*.jpg\" -c:v libx264 -crf 28 -preset slow -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
-    cmd = @ffmpeg_cmd
+      # FFmpeg command to stitch images
+      # -start_number 0: use the generated sequential input list
+      # -framerate 30: 30 fps
+      # -c:v libx264: H.264 codec (universal browser support, unlike H.265)
+      # -crf 28: Constant Rate Factor (good quality with small file size)
+      # -preset slow: Better compression ratio (slower encoding, smaller files)
+      # -profile:v high -level 4.0: Maximum compatibility across browsers/devices
+      # -pix_fmt yuv420p: Ensure compatibility with all players
+      # -movflags +faststart: Move moov atom to start for progressive browser playback
+      @ffmpeg_cmd = "ffmpeg -y -framerate 30 -start_number 0 -i \"#{compile_directory}/%06d.jpg\" -c:v libx264 -crf 28 -preset slow -profile:v high -level 4.0 -pix_fmt yuv420p -movflags +faststart \"#{output_path}\" > /dev/null 2>&1"
+      success = system(@ffmpeg_cmd)
 
-    success = system(cmd)
-
-    if success && File.exist?(output_path)
-      generate_thumbnail
-      create_video_record
-      puts "Successfully created video: #{output_path}"
-    else
-      handle_failure
+      if success && File.exist?(output_path)
+        generate_thumbnail
+        create_video_record
+        puts "Successfully created video: #{output_path}"
+      else
+        handle_failure
+      end
     end
   end
 
@@ -130,11 +132,13 @@ class StreamCompilerService
   end
 
   def send_mail(video)
-    VideoMailer.with(video: video).notification_email.deliver_now
-  rescue StandardError => e
-    Rails.logger.error "Failed to send email for video #{video.id}: #{e.message}"
-    Event.log(modulo: "notification", rotulo: "email_failure", valor: video.id, client_id: video.stream.client_id,
-      metadata: { error: e.message })
+    video.client.notification_emails.each do |recipient|
+      VideoMailer.with(video: video, recipient: recipient).notification_email.deliver_now
+    rescue StandardError => e
+      Rails.logger.error "Failed to send email for video #{video.id} to #{recipient}: #{e.message}"
+      Event.log(modulo: "notification", rotulo: "email_failure", valor: video.id, client_id: video.stream.client_id,
+        metadata: { error: e.message, to: recipient })
+    end
   end
 
   def handle_failure
@@ -151,5 +155,40 @@ class StreamCompilerService
     stream.update(error_message: error_msg)
 
     Event.log(modulo: "video", rotulo: "compilation_error", valor: stream.id, client_id: stream.client_id, metadata: { error: error_msg })
+  end
+
+  def selected_images
+    @selected_images ||= begin
+      images = Dir[input_directory.join("*.jpg")].sort
+      if !stream.capture_window_configured?
+        images
+      else
+        images.select do |image_path|
+          frame_time = extract_frame_time(image_path)
+          frame_time.present? && frame_time.between?(capture_start_key, capture_end_key)
+        end
+      end
+    end
+  end
+
+  def prepare_compile_directory(compile_directory)
+    selected_images.each_with_index do |image_path, index|
+      FileUtils.ln_sf(image_path, File.join(compile_directory, format("%06d.jpg", index)))
+    end
+  end
+
+  def extract_frame_time(image_path)
+    basename = File.basename(image_path, ".jpg")
+    return basename if basename.match?(/\A\d{6}\z/)
+
+    nil
+  end
+
+  def capture_start_key
+    @capture_start_key ||= stream.capture_start_time.strftime("%H%M%S")
+  end
+
+  def capture_end_key
+    @capture_end_key ||= stream.capture_end_time.strftime("%H%M%S")
   end
 end

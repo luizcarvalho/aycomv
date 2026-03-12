@@ -25,6 +25,7 @@
 
     <div class="stream-stats" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);">
       <span>Frames: <%= number_with_delimiter stream.frames_count %></span>
+      <span>• Janela: <%= stream.capture_window_label %></span>
       <% if stream.last_frame_at %>
         <span>• <%= time_ago_in_words(stream.last_frame_at) %> atrás</span>
       <% end %>
@@ -50,7 +51,7 @@
     <%= button_to "Excluir", stream_path(stream),
           method: :delete,
           class: "btn btn-danger-ghost btn-sm",
-          data: { turbo_confirm: "Excluir #{stream.name}? Os vídeos vinculados serão removidos." } %>
+          data: { turbo_confirm: "Excluir #{stream.name}? Esta ação é irreversível e removerá todos os frames e vídeos gerados." } %>
   </div>
 
   <div class="modal-overlay" data-modal-target="overlay" data-action="click->modal#closeOnBackdrop">
@@ -83,6 +84,10 @@
         <div class="modal-detail-row">
           <span class="modal-detail-label">Status</span>
           <span class="modal-detail-value"><%= stream.status.capitalize %></span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Janela de compilação</span>
+          <span class="modal-detail-value"><%= stream.capture_window_label %></span>
         </div>
         <div class="modal-detail-row">
           <span class="modal-detail-label">Frames</span>

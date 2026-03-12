@@ -2,6 +2,7 @@ require "test_helper"
 
 class VideosControllerTest < ActionDispatch::IntegrationTest
   setup do
+    sign_in_as(users(:one))
     @video_one = videos(:one)
     @video_two = videos(:two)
     @video_three = videos(:three)

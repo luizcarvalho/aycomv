@@ -28,4 +28,20 @@ class StreamCompilerServiceTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "filters frames using stream capture window" do
+    @stream.update!(capture_start_time: "06:00", capture_end_time: "18:00")
+    input_directory = Rails.root.join("storage", "streams", @stream.id.to_s, @date.to_s)
+    FileUtils.mkdir_p(input_directory)
+
+    %w[055959.jpg 060000.jpg 120000.jpg 180000.jpg 180001.jpg].each do |filename|
+      FileUtils.touch(input_directory.join(filename))
+    end
+
+    service = StreamCompilerService.new(@stream, @date)
+
+    assert_equal 3, service.send(:image_count)
+  ensure
+    FileUtils.rm_rf(Rails.root.join("storage", "streams", @stream.id.to_s))
+  end
 end

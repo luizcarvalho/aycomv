@@ -17,7 +17,7 @@
       <dl class="detail-list">
         <div class="detail-item">
           <dt>E-mail</dt>
-          <dd><%= @client.email %></dd>
+          <dd><%= safe_join(@client.notification_emails, tag.br) %></dd>
         </div>
         <div class="detail-item">
           <dt>Notificações</dt>

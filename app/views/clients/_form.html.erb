@@ -17,7 +17,8 @@
 
   <div class="form-group">
     <%= f.label :email, "E-mail", class: "form-label" %>
-    <%= f.email_field :email, class: "form-input", placeholder: "email@exemplo.com.br", required: true %>
+    <%= f.text_field :email, class: "form-input", placeholder: "email1@exemplo.com.br, email2@exemplo.com.br", required: true %>
+    <p class="form-hint">Separe múltiplos destinatários com vírgula.</p>
   </div>
 
   <div class="form-group">

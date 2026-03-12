@@ -1,4 +1,16 @@
 <%= form_with model: stream, class: "form" do |f| %>
+  <% if stream.errors.any? %>
+    <div class="error_explanation">
+      <h2><%= pluralize(stream.errors.count, "erro") %> impediram que este stream fosse salvo:</h2>
+
+      <ul>
+        <% stream.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="form-group">
     <%= f.label :name, "Nome do Stream", class: "form-label" %>
     <%= f.text_field :name, class: "form-input", placeholder: "Ex: Camera Torre", required: true %>
@@ -14,6 +26,17 @@
     <%= f.collection_select :client_id, @clients, :id, :name,
           { prompt: "Selecione um cliente" },
           { class: "form-select", required: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :capture_start_time, "Horário de Início da Captura", class: "form-label" %>
+    <%= f.time_field :capture_start_time, class: "form-input", step: 60 %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :capture_end_time, "Horário de Término da Captura", class: "form-label" %>
+    <%= f.time_field :capture_end_time, class: "form-input", step: 60 %>
+    <p class="form-hint">Os frames continuam sendo capturados o dia inteiro. Esse intervalo só filtra o vídeo gerado.</p>
   </div>
 
   <div class="form-actions">

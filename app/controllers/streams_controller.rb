@@ -17,9 +17,15 @@ class StreamsController < ApplicationController
   end
 
   def create
-    @stream = Stream.create!(stream_params)
-    Event.log(modulo: "stream", rotulo: "stream_created", valor: @stream.id, client_id: @stream.client_id, metadata: { name: @stream.name })
-    redirect_to streams_path, notice: "Stream adicionado com sucesso!"
+    @stream = Stream.new(stream_params)
+    @clients = Client.alphabetically
+
+    if @stream.save
+      Event.log(modulo: "stream", rotulo: "stream_created", valor: @stream.id, client_id: @stream.client_id, metadata: { name: @stream.name })
+      redirect_to streams_path, notice: "Stream adicionado com sucesso!"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -27,9 +33,14 @@ class StreamsController < ApplicationController
   end
 
   def update
-    @stream.update!(stream_params)
-    Event.log(modulo: "stream", rotulo: "stream_updated", valor: @stream.id, client_id: @stream.client_id, metadata: { name: @stream.name })
-    redirect_to streams_path, notice: "Alterações salvas com sucesso!"
+    @clients = Client.alphabetically
+
+    if @stream.update(stream_params)
+      Event.log(modulo: "stream", rotulo: "stream_updated", valor: @stream.id, client_id: @stream.client_id, metadata: { name: @stream.name })
+      redirect_to streams_path, notice: "Alterações salvas com sucesso!"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -44,6 +55,6 @@ class StreamsController < ApplicationController
     end
 
     def stream_params
-      params.expect(stream: [ :name, :url, :client_id ])
+      params.expect(stream: [ :name, :url, :client_id, :capture_start_time, :capture_end_time ])
     end
 end
