@@ -90,7 +90,7 @@
               </button>
             <% end %>
 
-            <%= button_to "Excluir", video_path(video),
+            <%= button_to "Excluir", video_path(video, request.query_parameters.slice("client_id", "stream_id", "date", "sort", "page")),
                   method: :delete,
                   class: "btn btn-danger-ghost btn-sm",
                   data: { turbo_confirm: "Excluir este vídeo?" } %>

@@ -18,9 +18,9 @@ class VideosController < ApplicationController
       metadata: { stream_name: @video.stream.name, date: @video.date.to_s })
 
     if @video.destroy
-      redirect_to videos_path, notice: "Vídeo excluído com sucesso."
+      redirect_to videos_path(videos_index_params), notice: "Vídeo excluído com sucesso."
     else
-      redirect_to videos_path, alert: "Erro ao excluir vídeo: #{@video.errors.full_messages.join(', ')}"
+      redirect_to videos_path(videos_index_params), alert: "Erro ao excluir vídeo: #{@video.errors.full_messages.join(', ')}"
     end
   end
 
@@ -29,6 +29,10 @@ class VideosController < ApplicationController
   def set_video
     @video = Video.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to videos_path, alert: "Vídeo não encontrado."
+    redirect_to videos_path(videos_index_params), alert: "Vídeo não encontrado."
+  end
+
+  def videos_index_params
+    params.permit(:client_id, :stream_id, :date, :sort, :page).to_h
   end
 end
