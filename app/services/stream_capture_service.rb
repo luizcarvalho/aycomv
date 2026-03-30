@@ -35,10 +35,11 @@ class StreamCaptureService
     # -rw_timeout 10000000: 10s timeout for TCP reads (microseconds)
     # -loglevel error: suppress verbose output
     # -i: input url
-    # -vframes 1: output one frame
-    # -q:v 2: high quality jpeg
-    cmd = "ffmpeg -y -rw_timeout 10000000 -loglevel error -i \"#{stream.url}\" -vframes 1 -q:v 2 \"#{filepath}\""
-    stdout, stderr, status = Open3.capture3(cmd)
+    # -frames:v 1: output one frame
+    # -map_metadata -1: do not embed source metadata in the image
+    # -pix_fmt yuvj420p: store JPEG using a smaller and widely compatible pixel format
+    # -q:v 10: high quality jpeg
+    stdout, stderr, status = Open3.capture3(*ffmpeg_command)
 
     if status.success? && File.exist?(filepath)
       handle_success(filepath)
@@ -96,5 +97,20 @@ class StreamCaptureService
       # Clear error message if capture was successful but we skipped preview update
       stream.update(error_message: nil)
     end
+  end
+
+  def ffmpeg_command
+    [
+      "ffmpeg",
+      "-y",
+      "-rw_timeout", "10000000",
+      "-loglevel", "error",
+      "-i", stream.url,
+      "-frames:v", "1",
+      "-map_metadata", "-1",
+      "-pix_fmt", "yuvj420p",
+      "-q:v", "10",
+      filepath.to_s
+    ]
   end
 end
